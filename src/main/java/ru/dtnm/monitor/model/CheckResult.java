@@ -1,5 +1,7 @@
 package ru.dtnm.monitor.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,6 +21,7 @@ public class CheckResult {
     private Long lastResponseDuration;
     private Date lastResponse;
     private CheckStatus status;
+    private String comment;
 
     public String getMnemo() {
         return mnemo;
@@ -67,5 +70,18 @@ public class CheckResult {
     public CheckResult withStatus(CheckStatus status) {
         this.status = status;
         return this;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public CheckResult withComment(String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    public String toString() {
+        return String.format("[mnemo=%s, url=%s, status=%s]", mnemo, url, status);
     }
 }

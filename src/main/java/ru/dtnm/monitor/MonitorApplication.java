@@ -14,7 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @SpringBootApplication
 @Configuration
 @ComponentScan(basePackages = {
-        "ru.dtnm.monitor.rest.api",
+        "ru.dtnm.monitor",
+		"ru.dtnm.monitor.rest.api",
         "ru.dtnm.monitor.history"
 })
 public class MonitorApplication {

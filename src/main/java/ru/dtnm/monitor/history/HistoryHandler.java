@@ -37,7 +37,7 @@ public class HistoryHandler {
      * @param checkResult результат
      */
     public void writeHistory(final String mnemo, final CheckResult checkResult) {
-        LOG.debug(">> writeHistory for mnemo={} and checkResul={}", mnemo, checkResult);
+        LOG.debug(">> writeHistory for mnemo={} and checkResult={}", mnemo, checkResult);
         try {
             final File historyDir = new File(historyLocation);
             if (!historyDir.exists()) historyDir.mkdir();
@@ -60,8 +60,8 @@ public class HistoryHandler {
      *
      * @param mnemo мнемо опрашиваемого компонента
      */
-    public CheckResult lastCheckResult (final String mnemo) {
-        LOG.debug(">> lastCheckResult for mnemo={}", mnemo);
+    public CheckResult getLastCheckResult(final String mnemo) {
+        LOG.debug(">> getLastCheckResult for mnemo={}", mnemo);
         CheckResult result = null;
         final File file = new File(getPath(historyLocation, mnemo));
         try {
