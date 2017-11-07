@@ -1,0 +1,12 @@
+{
+  "components": [
+    {
+      "mnemo": "yandex",
+      "url": "http://ya.ru"
+    },
+    {
+      "mnemo": "rambler",
+      "url": "http://rambler.ru"
+    }
+  ]
+}
