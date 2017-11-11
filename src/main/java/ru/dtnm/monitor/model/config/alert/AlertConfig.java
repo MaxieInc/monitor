@@ -1,7 +1,5 @@
 package ru.dtnm.monitor.model.config.alert;
 
-import ru.dtnm.monitor.model.CheckStatus;
-
 import java.io.Serializable;
 import java.util.Collection;
 

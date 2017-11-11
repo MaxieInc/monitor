@@ -15,6 +15,7 @@ import ru.dtnm.monitor.history.HistoryHandler;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
 import ru.dtnm.monitor.model.config.alert.AlertConfigContainer;
 import ru.dtnm.monitor.model.config.component.MonitorConfig;
+import ru.dtnm.monitor.notification.AlertHandler;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
@@ -45,6 +46,9 @@ public class CheckerContainer {
 
     @Autowired
     private HistoryHandler historyHandler;
+
+    @Autowired
+    private AlertHandler alertHandler;
 
     @Value("${monitor.config.location:null}")
     private String monitorConfigLocation;
@@ -114,7 +118,7 @@ public class CheckerContainer {
     private void pingAl() {
         if (!blocked) {
             for (Checker checker : CHECKERS.values()) {
-                checker.check(historyHandler);
+                checker.check(historyHandler, alertHandler);
             }
         }
     }

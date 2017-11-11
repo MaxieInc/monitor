@@ -6,6 +6,7 @@ import ru.dtnm.monitor.model.CheckResult;
 import ru.dtnm.monitor.model.CheckStatus;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
 import ru.dtnm.monitor.model.config.component.ComponentInfo;
+import ru.dtnm.monitor.notification.AlertHandler;
 
 import java.util.Date;
 
@@ -37,7 +38,7 @@ public abstract class Checker {
         this.alertConfig = alertConfig;
     }
 
-    public abstract void check(HistoryHandler historyHandler);
+    public abstract void check(HistoryHandler historyHandler, final AlertHandler alertHandler);
 
     /**
      * Конструктор результата

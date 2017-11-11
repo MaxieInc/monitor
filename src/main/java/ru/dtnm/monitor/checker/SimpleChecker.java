@@ -11,6 +11,7 @@ import ru.dtnm.monitor.history.HistoryHandler;
 import ru.dtnm.monitor.model.CheckResult;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
 import ru.dtnm.monitor.model.config.component.ComponentInfo;
+import ru.dtnm.monitor.notification.AlertHandler;
 
 import java.io.IOException;
 import java.util.Date;
@@ -33,7 +34,7 @@ public class SimpleChecker extends Checker {
      *
      * @param historyHandler
      */
-    public void check (final HistoryHandler historyHandler) {
+    public void check (final HistoryHandler historyHandler, final AlertHandler alertHandler) {
         final HttpClient httpClient = HttpClients.createDefault();
         Integer httpStatus = null;
         HttpResponse response = null;
@@ -51,6 +52,11 @@ public class SimpleChecker extends Checker {
             }
             final CheckResult result = getResult(response.getStatusLine().getStatusCode(), startDate, endDate);
             historyHandler.writeHistory(componentInfo.getMnemo(), result);
+            // При необходимости уведомить кого-либо - уведомили
+            alertConfig.getActions()
+                .stream()
+                .filter(e -> e.getStatus().equals(result.getStatus()))
+                .forEach(a -> alertHandler.notify(componentInfo.getMnemo(), a));
         } catch (IOException ioe) {
             LOG.error("Unable to perform check: {}", ioe.getMessage(), ioe);
             historyHandler.writeHistory(componentInfo.getMnemo(), getExceptionResult(ioe.getMessage()));

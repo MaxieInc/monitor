@@ -4,6 +4,7 @@
       "mnemo": "yandex",
       "caption": "Яндекс главная",
       "descr": "Мониторинг главной страницы яндекса - как просто первый пример",
+      "url": "http://yandex.ru",
       "keepAlive": 180000,
       "timeout": 1000,
       "responses": {
