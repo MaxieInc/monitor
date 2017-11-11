@@ -12,17 +12,17 @@ import org.springframework.stereotype.Component;
 import ru.dtnm.monitor.checker.Checker;
 import ru.dtnm.monitor.checker.SimpleChecker;
 import ru.dtnm.monitor.history.HistoryHandler;
-import ru.dtnm.monitor.model.CheckResult;
-import ru.dtnm.monitor.model.config.ConfigComponent;
-import ru.dtnm.monitor.model.config.MonitorConfig;
+import ru.dtnm.monitor.model.config.alert.AlertConfig;
+import ru.dtnm.monitor.model.config.alert.AlertConfigContainer;
+import ru.dtnm.monitor.model.config.component.MonitorConfig;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Контейнер опрашивающих компонентов
@@ -47,26 +47,38 @@ public class CheckerContainer {
     private HistoryHandler historyHandler;
 
     @Value("${monitor.config.location:null}")
-    private String configFileLocation;
+    private String monitorConfigLocation;
 
-    /**
-     * Мап сущностей, опрашивающих удалённые компоненты
-     */
+    @Value("${alert.config.location:null}")
+    private String alertConfigLocation;
+
+
+    /** Мап сущностей, опрашивающих удалённые компоненты*/
     private static final Map<String, Checker> CHECKERS = new HashMap<>();
 
     @PostConstruct
     private void init() {
-        readConfig();
+        reloadConfig();
     }
 
     /**
-     * Читает текущую конфигурацию из конфигурационного JSONа
+     * Читает конфигурацию из файла и возвращает соответствующий класс
      *
+     * @param configLocation расположение файла конфигурации
+     * @param clazz класс - контейнер
+     * @param <T> класс - контейнер
      * @throws IOException
      */
-    public MonitorConfig getMonitorConfig() throws IOException{
-        final String configJson = IOUtils.toString(new FileInputStream(configFileLocation));
-        return objectMapper.readValue(configJson, MonitorConfig.class);
+    private <T> T getConfig(final String configLocation, final Class<T> clazz) throws IOException {
+        final String configJson = IOUtils.toString(new FileInputStream(configLocation));
+        return objectMapper.readValue(configJson, clazz);
+    }
+
+    public Map<String, Object> readConfigs() throws IOException {
+        return new HashMap<String, Object>(){{
+            put("monitor", getConfig(monitorConfigLocation, MonitorConfig.class));
+            put("alert", getConfig(alertConfigLocation, AlertConfigContainer.class));
+        }};
     }
 
     /**
@@ -79,15 +91,19 @@ public class CheckerContainer {
     /**
      * Обновление конфигурации
      */
-    public void readConfig() {
+    public void reloadConfig() {
         blocked = true;
         CHECKERS.clear();
         try {
-            final MonitorConfig config = getMonitorConfig();
-            for (ConfigComponent component : config.getComponents()) {
-                final SimpleChecker checker = new SimpleChecker(component.getMnemo(), component.getUrl());
-                CHECKERS.put(checker.getMnemo(), checker);
-            }
+            // конфиг оповещений
+            final Map<String, AlertConfig> alertConfigs = getConfig(alertConfigLocation, AlertConfigContainer.class)
+                    .getAlertConfigs()
+                    .stream()
+                    .collect(Collectors.toMap(AlertConfig::getComponent, e -> e));
+            // Конфиг опрашиваемых компонентов
+            getConfig(monitorConfigLocation, MonitorConfig.class)
+                    .getComponents()
+                    .forEach(e -> CHECKERS.put(e.getMnemo(), new SimpleChecker(e, alertConfigs.get(e.getMnemo()))));
         } catch (IOException ioe) {
             LOG.error("Unable to read configJson: {}", ioe.getMessage());
         }

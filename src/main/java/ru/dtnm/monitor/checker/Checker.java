@@ -4,6 +4,8 @@ import org.apache.http.HttpStatus;
 import ru.dtnm.monitor.history.HistoryHandler;
 import ru.dtnm.monitor.model.CheckResult;
 import ru.dtnm.monitor.model.CheckStatus;
+import ru.dtnm.monitor.model.config.alert.AlertConfig;
+import ru.dtnm.monitor.model.config.component.ComponentInfo;
 
 import java.util.Date;
 
@@ -14,17 +16,25 @@ import java.util.Date;
  */
 public abstract class Checker {
 
-    // Мнемоника опрашиваемого компонента
-    protected String mnemo;
-    // Урл опрашиваемого компонента
-    protected String url;
+    protected ComponentInfo componentInfo;
+    protected AlertConfig alertConfig;
 
-    public String getMnemo() {
-        return mnemo;
+    /** Возвращает собственную конфигурацию компонента */
+    public ComponentInfo getComponentInfo() {
+        return componentInfo;
     }
 
-    public String getUrl() {
-        return url;
+    public void setComponentInfo(ComponentInfo componentInfo) {
+        this.componentInfo = componentInfo;
+    }
+
+    /** Возвращает конфигурацию уведомлений по компоненту */
+    public AlertConfig getAlertConfig() {
+        return alertConfig;
+    }
+
+    public void setAlertConfig(AlertConfig alertConfig) {
+        this.alertConfig = alertConfig;
     }
 
     public abstract void check(HistoryHandler historyHandler);
@@ -38,23 +48,23 @@ public abstract class Checker {
      */
     public CheckResult getResult(int httpStatus, final Date start, final Date end) {
         return new CheckResult()
-                .withMnemo(mnemo)
-                .withUrl(url)
+                .withMnemo(componentInfo.getMnemo())
+                .withUrl(componentInfo.getUrl())
                 .withLastResponseDuration(end.getTime() - start.getTime())
                 .withLastResponse(end)
-                .withStatus(HttpStatus.SC_OK == httpStatus ? CheckStatus.UP : CheckStatus.DOWN);
+                .withStatus(HttpStatus.SC_OK == httpStatus ? CheckStatus.HEALTHY : CheckStatus.FAILED);
     }
 
     public CheckResult getExceptionResult(final String comment) {
         return new CheckResult()
-                .withMnemo(mnemo)
-                .withUrl(url)
-                .withStatus(CheckStatus.DOWN)
+                .withMnemo(componentInfo.getMnemo())
+                .withUrl(componentInfo.getUrl())
+                .withStatus(CheckStatus.FAILED)
                 .withComment(comment);
     }
 
-    public Checker(final String mnemo, final String url) {
-        this.mnemo = mnemo;
-        this.url = url;
+    public Checker(ComponentInfo componentInfo, AlertConfig alertConfig) {
+        this.componentInfo = componentInfo;
+        this.alertConfig = alertConfig;
     }
 }

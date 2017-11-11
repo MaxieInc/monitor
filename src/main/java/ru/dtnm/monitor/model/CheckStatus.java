@@ -9,10 +9,10 @@ package ru.dtnm.monitor.model;
  */
 public enum CheckStatus {
 
-    UP          ("Работает"),
+    HEALTHY     ("Работает"),
     WARNING     ("Внимание"),
     CRITICAL    ("Критический сбой"),
-    DOWN        ("Не работает");
+    FAILED      ("Не работает");
 
 
     CheckStatus(String description) {

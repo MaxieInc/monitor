@@ -2,15 +2,27 @@
   "components": [
     {
       "mnemo": "yandex",
-      "url": "http://ya.ru"
-    },
-    {
-      "mnemo": "rambler",
-      "url": "http://rambler.ru"
-    },
-    {
-      "mnemo": "google",
-      "url": "http://google.com"
+      "caption": "Яндекс главная",
+      "descr": "Мониторинг главной страницы яндекса - как просто первый пример",
+      "keepAlive": 180000,
+      "timeout": 1000,
+      "responses": {
+        "healthy": [],
+        "warning": [],
+        "critical": [],
+        "failed": [],
+        "others": "Ошибка",
+        "timeout": ""
+      },
+      "metrics": [{
+        "mnemo": "metric.mnemo",
+        "mandatory": true,
+        "healthy": [0, 100],
+        "warning": [100, 250],
+        "critical": [251, 1000],
+        "failed": [1001, 180000]
+      }],
+      "properties": []
     }
   ]
 }

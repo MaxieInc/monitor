@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.dtnm.monitor.history.HistoryHandler;
 import ru.dtnm.monitor.model.CheckResult;
+import ru.dtnm.monitor.model.config.alert.AlertConfig;
+import ru.dtnm.monitor.model.config.component.ComponentInfo;
 
 import java.io.IOException;
 import java.util.Date;
@@ -38,7 +40,7 @@ public class SimpleChecker extends Checker {
         final Date startDate = new Date();
         Date endDate = null;
         try {
-            final HttpGet get = new HttpGet(url);
+            final HttpGet get = new HttpGet(componentInfo.getUrl());
             response = httpClient.execute(get);
             endDate = new Date();
 
@@ -48,14 +50,14 @@ public class SimpleChecker extends Checker {
                 LOG.debug("Error! Status is {}", response.getStatusLine().getStatusCode());
             }
             final CheckResult result = getResult(response.getStatusLine().getStatusCode(), startDate, endDate);
-            historyHandler.writeHistory(mnemo, result);
+            historyHandler.writeHistory(componentInfo.getMnemo(), result);
         } catch (IOException ioe) {
             LOG.error("Unable to perform check: {}", ioe.getMessage(), ioe);
-            historyHandler.writeHistory(mnemo, getExceptionResult(ioe.getMessage()));
+            historyHandler.writeHistory(componentInfo.getMnemo(), getExceptionResult(ioe.getMessage()));
         }
     }
 
-    public SimpleChecker(String mnemo, String url) {
-        super(mnemo, url);
+    public SimpleChecker(final ComponentInfo componentInfo, final AlertConfig alertConfig) {
+        super(componentInfo, alertConfig);
     }
 }

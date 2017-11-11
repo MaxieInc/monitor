@@ -1,0 +1,32 @@
+{
+  "alertConfigs": [
+    {
+      "component": "yandex",
+      "actions": [
+        {
+          "status": "HEALTHY",
+          "login": "maxie@bk.ru",
+          "email": false,
+          "sms": false
+        },
+        {
+          "status": "WARNING",
+          "login": "maxie@bk.ru",
+          "email": true,
+          "sms": false
+        },{
+          "status": "CRITICAL",
+          "login": "maxie@bk.ru",
+          "email": false,
+          "sms": true
+        },
+        {
+          "status": "FAILED",
+          "login": "maxie@bk.ru",
+          "email": true,
+          "sms": false
+        }
+      ]
+    }
+  ]
+}

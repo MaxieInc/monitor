@@ -1,9 +1,9 @@
-package ru.dtnm.monitor.model.config;
+package ru.dtnm.monitor.model.config.alert;
 
 import java.io.Serializable;
 
 /**
- * <p>Конфиг: Информация об уведомляемом (ответственном) лице</p>
+ * <p>Конфиг: Информация об уведомляемом (ответственном) лице </p>
  * @author Яковлев В.Л.
  */
 public class AlertPerson implements Serializable {

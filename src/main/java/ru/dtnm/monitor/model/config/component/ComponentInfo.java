@@ -1,4 +1,4 @@
-package ru.dtnm.monitor.model.config;
+package ru.dtnm.monitor.model.config.component;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -12,6 +12,7 @@ public class ComponentInfo implements Serializable {
     private String mnemo;
     private String caption;
     private String descr;
+    private String url;
     private long keepAlive;
     private long timeout;
     private ComponentResponses responses;
@@ -43,6 +44,15 @@ public class ComponentInfo implements Serializable {
 
     public void setDescr(String descr) {
         this.descr = descr;
+    }
+
+    /** [Обязательное] УРЛ опрашиваемого компонета*/
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     /** [Обязательный] Интервал (в миллисекундах), в течение которого компонент считается "живым" с момента последней активности */

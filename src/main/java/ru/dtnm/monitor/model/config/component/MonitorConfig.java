@@ -1,4 +1,4 @@
-package ru.dtnm.monitor.model.config;
+package ru.dtnm.monitor.model.config.component;
 
 import java.util.List;
 

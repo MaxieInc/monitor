@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.dtnm.monitor.CheckerContainer;
-import ru.dtnm.monitor.model.config.MonitorConfig;
 
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * РЕСТ-сервис для управления текущей конфигурацией
@@ -33,9 +33,9 @@ public class ConfigService {
      * @throws IOException
      */
     @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON)
-    public MonitorConfig getCurrentConfig() throws IOException {
+    public Map<String, Object> getCurrentConfig() throws IOException {
         LOG.debug(">> getCurrentConfig");
-        return checkerContainer.getMonitorConfig();
+        return checkerContainer.readConfigs();
     }
 
     /**
@@ -44,6 +44,6 @@ public class ConfigService {
     @GetMapping(path = "/refresh", produces = MediaType.APPLICATION_JSON)
     public void refreshConfig() {
         LOG.debug(">> refreshConfig");
-        checkerContainer.readConfig();
+        checkerContainer.reloadConfig();
     }
 }

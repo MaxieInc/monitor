@@ -1,4 +1,6 @@
-package ru.dtnm.monitor.model.config;
+package ru.dtnm.monitor.model.config.alert;
+
+import ru.dtnm.monitor.model.CheckStatus;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -10,7 +12,6 @@ import java.util.Collection;
 public class AlertConfig implements Serializable {
 
     private String component;
-    private String status;
     private Collection<AlertAction> actions;
 
     /** [Обязательный] Строковый мнемокод компонента */
@@ -20,15 +21,6 @@ public class AlertConfig implements Serializable {
 
     public void setComponent(String component) {
         this.component = component;
-    }
-
-    /** [Обязательный] Строковый статус компонента (HEALTHY, WARNING, CRITICAL, FAILED) */
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     /** [Обязательный] Способы уведомления ответственных лиц */
