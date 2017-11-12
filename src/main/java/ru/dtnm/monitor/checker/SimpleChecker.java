@@ -8,7 +8,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.dtnm.monitor.history.HistoryHandler;
-import ru.dtnm.monitor.model.CheckResult;
+import ru.dtnm.monitor.model.QueryResult;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
 import ru.dtnm.monitor.model.config.component.ComponentInfo;
 import ru.dtnm.monitor.notification.AlertHandler;
@@ -50,16 +50,18 @@ public class SimpleChecker extends Checker {
             } else {
                 LOG.debug("Error! Status is {}", response.getStatusLine().getStatusCode());
             }
-            final CheckResult result = getResult(response.getStatusLine().getStatusCode(), startDate, endDate);
-            historyHandler.writeHistory(componentInfo.getMnemo(), result);
+            final QueryResult queryResult = new QueryResult(response.getStatusLine().getStatusCode(), startDate, endDate)
+                    .withMnemo(componentInfo.getMnemo())
+                    .withUrl(componentInfo.getUrl());
+            historyHandler.writeHistory(queryResult);
             // При необходимости уведомить кого-либо - уведомили
             alertConfig.getActions()
                 .stream()
-                .filter(e -> e.getStatus().equals(result.getStatus()))
+                .filter(e -> e.getStatus().equals(queryResult.getStatus()))
                 .forEach(a -> alertHandler.notify(componentInfo.getMnemo(), a));
         } catch (IOException ioe) {
             LOG.error("Unable to perform check: {}", ioe.getMessage(), ioe);
-            historyHandler.writeHistory(componentInfo.getMnemo(), getExceptionResult(ioe.getMessage()));
+            historyHandler.writeHistory(new QueryResult(componentInfo.getMnemo(), componentInfo.getUrl(), ioe.getMessage()));
         }
     }
 

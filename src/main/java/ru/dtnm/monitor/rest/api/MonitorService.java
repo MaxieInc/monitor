@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.dtnm.monitor.CheckerContainer;
 import ru.dtnm.monitor.history.HistoryHandler;
-import ru.dtnm.monitor.model.CheckResult;
+import ru.dtnm.monitor.model.QueryResult;
 
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -37,7 +37,7 @@ public class MonitorService {
      * @param mnemo мнемо компонента
      */
     @GetMapping(path = "/{mnemo}", produces = MediaType.APPLICATION_JSON)
-    public CheckResult getStatus(@PathVariable("mnemo") final String mnemo) {
+    public QueryResult getStatus(@PathVariable("mnemo") final String mnemo) {
         LOG.debug(">> getStatus by mnemo: {}", mnemo);
         return historyHandler.getLastCheckResult(mnemo);
     }
@@ -46,7 +46,7 @@ public class MonitorService {
      * Возвращает список результатов опросов всех зарегистрированных компонентов
      */
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON)
-    public List<CheckResult> getAllResults() {
+    public List<QueryResult> getAllResults() {
         LOG.debug(">> getAllResults");
         return checkerContainer
                 .getRegisteredMnemos()

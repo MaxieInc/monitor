@@ -14,6 +14,7 @@ import ru.dtnm.monitor.checker.SimpleChecker;
 import ru.dtnm.monitor.history.HistoryHandler;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
 import ru.dtnm.monitor.model.config.alert.AlertConfigContainer;
+import ru.dtnm.monitor.model.config.component.ComponentInfo;
 import ru.dtnm.monitor.model.config.component.MonitorConfig;
 import ru.dtnm.monitor.notification.AlertHandler;
 
@@ -83,6 +84,19 @@ public class CheckerContainer {
             put("monitor", getConfig(monitorConfigLocation, MonitorConfig.class));
             put("alert", getConfig(alertConfigLocation, AlertConfigContainer.class));
         }};
+    }
+
+    /**
+     * Возвращает конфигурацию указанного компонента
+     * @param mnemo
+     */
+    public ComponentInfo getConfigByMnemo(final String mnemo) throws IOException {
+        return getConfig(monitorConfigLocation, MonitorConfig.class)
+                .getComponents()
+                .stream()
+                .filter(e -> e.getMnemo().equals(mnemo))
+                .findFirst()
+                .get();
     }
 
     /**
