@@ -14,7 +14,7 @@ public class ComponentInfo implements Serializable {
     private String descr;
     private String url;
     private long keepAlive;
-    private long timeout;
+    private Integer timeout;
     private ComponentResponses responses;
     private Collection<ComponentMetric> metrics;
     private Collection<ComponentProperty> properties;
@@ -65,11 +65,11 @@ public class ComponentInfo implements Serializable {
     }
 
     /** [Необязательное] Максимальное время ожидания (в миллисекундах) ответа от компонента (только для опрашиваемых компонентов) */
-    public long getTimeout() {
+    public Integer getTimeout() {
         return timeout;
     }
 
-    public void setTimeout(long timeout) {
+    public void setTimeout(Integer timeout) {
         this.timeout = timeout;
     }
 

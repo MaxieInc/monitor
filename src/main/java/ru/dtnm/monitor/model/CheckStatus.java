@@ -1,7 +1,7 @@
 package ru.dtnm.monitor.model;
 
 /**
- * Перечисление: djpvj;yst cnfnecs vjybnjhbyuf rjvgjytynf
+ * Перечисление: статус проверки состояния компонента
  *
  * @author M.Belolipov
  * @version 0.1
@@ -9,17 +9,19 @@ package ru.dtnm.monitor.model;
  */
 public enum CheckStatus {
 
-    HEALTHY     ("Работает"),
-    WARNING     ("Внимание"),
-    CRITICAL    ("Критический сбой"),
-    FAILED      ("Не работает");
+    HEALTHY     ("Работает",            0),
+    WARNING     ("Внимание",            1),
+    CRITICAL    ("Критический сбой",    2),
+    FAILED      ("Не работает",         3);
 
 
-    CheckStatus(String description) {
+    CheckStatus(String description, int number) {
         this.description = description;
     }
 
     private String description;
+    /** Номер для сравнения */
+    private int number;
 
     public String getDescription() {
         return description;
@@ -27,5 +29,23 @@ public enum CheckStatus {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    /**
+     * Сравнивает два статуса, возвращает худший
+     *
+     * @param status сравниваемый статус
+     */
+    public CheckStatus getWorst(final CheckStatus status) {
+        if (this.number >= status.number) return this;
+        else return status;
     }
 }
