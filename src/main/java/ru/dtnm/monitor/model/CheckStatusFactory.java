@@ -3,6 +3,8 @@ package ru.dtnm.monitor.model;
 import ru.dtnm.monitor.model.config.component.ComponentInfo;
 import ru.dtnm.monitor.model.config.component.ComponentResponses;
 import ru.dtnm.monitor.model.query.ComponentResponse;
+import ru.dtnm.monitor.model.status.CheckStatus;
+import ru.dtnm.monitor.model.status.CheckStatusResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +27,8 @@ public class CheckStatusFactory {
      * @param componentResponse результат последнего опроса компонента
      * @param componentInfo конфигурация наблюдаемого компонента
      */
-    public CheckStatus status(final ComponentResponse componentResponse, final ComponentInfo componentInfo) throws IOException {
+    public static CheckStatusResponse status(final ComponentResponse componentResponse, final ComponentInfo componentInfo) throws IOException {
+        final CheckStatusResponse response = new CheckStatusResponse();
         final List<CheckStatus> statuses = new ArrayList<>();
         // 1. Проверка на соответствие тела HTTP-ответа и статуса компонента
         statuses.add(checkResponseStrings("200 ok", componentInfo.getResponses()));
@@ -40,7 +43,9 @@ public class CheckStatusFactory {
         // todo Реализовать
         // 5. Проверка по пропертям
         // todo Реализовать
-        return statuses.stream().reduce(CheckStatus::getWorst).get();
+        response.setLastResponse(componentResponse);
+        response.setStatus(statuses.stream().reduce(CheckStatus::getWorst).get());
+        return response;
     }
 
     /**
@@ -49,7 +54,7 @@ public class CheckStatusFactory {
      * @param responseString тело ответа
      * @param componentResponses описание масок ответов для статусов
      */
-    private CheckStatus checkResponseStrings(final String responseString, final ComponentResponses componentResponses) {
+    private static CheckStatus checkResponseStrings(final String responseString, final ComponentResponses componentResponses) {
         // todo реализовать поиск по регулярному выражению
         if (componentResponses.getHealthy().contains(responseString)) return CheckStatus.HEALTHY;
         else if (componentResponses.getWarning().contains(responseString)) return CheckStatus.WARNING;

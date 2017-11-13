@@ -12,8 +12,8 @@
         "warning": [],
         "critical": [],
         "failed": [],
-        "others": "Ошибка",
-        "timeout": ""
+        "others": "FAILED",
+        "timeout": "FAILED"
       },
       "metrics": [{
         "mnemo": "metric.mnemo",

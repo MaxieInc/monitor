@@ -1,4 +1,4 @@
-package ru.dtnm.monitor.model;
+package ru.dtnm.monitor.model.status;
 
 /**
  * Перечисление: статус проверки состояния компонента
@@ -9,10 +9,12 @@ package ru.dtnm.monitor.model;
  */
 public enum CheckStatus {
 
+    NOT_CHECKED ("Не проверяется",     -1),
     HEALTHY     ("Работает",            0),
     WARNING     ("Внимание",            1),
     CRITICAL    ("Критический сбой",    2),
-    FAILED      ("Не работает",         3);
+    FAILED      ("Не работает",         3),
+    UNKNOWN     ("Неизвестен",          4);
 
 
     CheckStatus(String description, int number) {

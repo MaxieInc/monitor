@@ -9,9 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.dtnm.monitor.CheckerContainer;
 import ru.dtnm.monitor.history.HistoryHandler;
+import ru.dtnm.monitor.model.status.CheckStatus;
+import ru.dtnm.monitor.model.CheckStatusFactory;
+import ru.dtnm.monitor.model.config.component.ComponentInfo;
 import ru.dtnm.monitor.model.query.ComponentResponse;
+import ru.dtnm.monitor.model.status.CheckStatusResponse;
 
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,21 +42,31 @@ public class MonitorService {
      * @param mnemo мнемо компонента
      */
     @GetMapping(path = "/{mnemo}", produces = MediaType.APPLICATION_JSON)
-    public ComponentResponse getStatus(@PathVariable("mnemo") final String mnemo) {
+    public CheckStatusResponse getStatus(@PathVariable("mnemo") final String mnemo) throws IOException {
         LOG.debug(">> getStatus by mnemo: {}", mnemo);
-        return historyHandler.getLastCheckResult(mnemo);
+        final ComponentResponse response = historyHandler.getLastCheckResult(mnemo);
+        final ComponentInfo config = checkerContainer.getConfigByMnemo(mnemo);
+        return CheckStatusFactory.status(response, config);
     }
 
     /**
      * Возвращает список результатов опросов всех зарегистрированных компонентов
      */
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON)
-    public List<ComponentResponse> getAllResults() {
+    public List<CheckStatusResponse> getAllResults() throws IOException {
         LOG.debug(">> getAllResults");
         return checkerContainer
                 .getRegisteredMnemos()
                 .stream()
-                .map(e -> historyHandler.getLastCheckResult(e))
+                .map(e -> {
+                    try {
+                        return getStatus(e);
+                    } catch (IOException ioe) {
+                        return new CheckStatusResponse()
+                                .setStatus(CheckStatus.UNKNOWN)
+                                .setLastResponse(historyHandler.getLastCheckResult(e));
+                    }
+                })
                 .collect(Collectors.toList());
     }
 }
