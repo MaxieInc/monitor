@@ -3,7 +3,6 @@ package ru.dtnm.monitor.checker;
 import ru.dtnm.monitor.history.HistoryHandler;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
 import ru.dtnm.monitor.model.config.component.ComponentInfo;
-import ru.dtnm.monitor.notification.AlertHandler;
 
 /**
  * @author M.Belolipov
@@ -33,7 +32,7 @@ public abstract class Checker {
         this.alertConfig = alertConfig;
     }
 
-    public abstract void check(HistoryHandler historyHandler, final AlertHandler alertHandler);
+    public abstract void check(HistoryHandler historyHandler);
 
     public Checker(ComponentInfo componentInfo, AlertConfig alertConfig) {
         this.componentInfo = componentInfo;

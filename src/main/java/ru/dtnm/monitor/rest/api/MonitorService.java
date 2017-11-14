@@ -44,9 +44,7 @@ public class MonitorService {
     @GetMapping(path = "/{mnemo}", produces = MediaType.APPLICATION_JSON)
     public CheckStatusResponse getStatus(@PathVariable("mnemo") final String mnemo) throws IOException {
         LOG.debug(">> getStatus by mnemo: {}", mnemo);
-        final ComponentResponse response = historyHandler.getLastCheckResult(mnemo);
-        final ComponentInfo config = checkerContainer.getConfigByMnemo(mnemo);
-        return CheckStatusFactory.status(response, config);
+        return historyHandler.getLastCheckResult(mnemo);
     }
 
     /**
@@ -64,7 +62,7 @@ public class MonitorService {
                     } catch (IOException ioe) {
                         return new CheckStatusResponse()
                                 .setStatus(CheckStatus.UNKNOWN)
-                                .setLastResponse(historyHandler.getLastCheckResult(e));
+                                .setLastResponse(new ComponentResponse().setComment(ioe.getMessage()));
                     }
                 })
                 .collect(Collectors.toList());

@@ -129,10 +129,10 @@ public class CheckerContainer {
     }
 
     @Scheduled(fixedDelayString = "${monitor.delay}")
-    private void pingAl() {
+    private void pingAll() {
         if (!blocked) {
             for (Checker checker : CHECKERS.values()) {
-                checker.check(historyHandler, alertHandler);
+                checker.check(historyHandler);
             }
         }
     }
