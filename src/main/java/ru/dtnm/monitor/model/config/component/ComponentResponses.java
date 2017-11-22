@@ -16,7 +16,7 @@ public class ComponentResponses implements Serializable {
     private String others;
     private String timeout;
 
-    /** [Обязательные] Строковые маски HTTP-ответов, соответствующие статусу компонента: Зеленый */
+    /** [Обязательные] Строковые маски HTTP-статусов ответов, соответствующие статусу компонента: Зеленый */
     public Collection<String> getHealthy() {
         return healthy;
     }

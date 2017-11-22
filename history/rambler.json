@@ -1,0 +1,11 @@
+{
+  "status": "FAILED",
+  "lastResponse": {
+    "mnemo": "yandex",
+    "url": "http://yandex.ru",
+    "httpStatus": 200,
+    "responseDuration": 46,
+    "lastOnline": 1510993421278,
+    "comment": null
+  }
+}
