@@ -8,11 +8,11 @@
       "keepAlive": 180000,
       "timeout": 1000,
       "responses": {
-        "healthy": [],
+        "healthy": ["200", "204"],
         "warning": [],
         "critical": [],
-        "failed": [],
-        "others": "FAILED",
+        "failed": ["40.+"],
+        "others": "CRITICAL",
         "timeout": "FAILED"
       },
       "metrics": [{

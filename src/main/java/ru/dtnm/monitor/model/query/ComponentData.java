@@ -15,8 +15,9 @@ public class ComponentData {
 
     /** Набор метрик компонента */
     private Collection<ComponentDataMetric> metrics;
+
     /** Набор строковых характеристик */
-    private Collection<ComponentProperty> properies;
+    private Collection<ComponentProperty> properties;
 
 
     public Collection<ComponentDataMetric> getMetrics() {
@@ -27,11 +28,11 @@ public class ComponentData {
         this.metrics = metrics;
     }
 
-    public Collection<ComponentProperty> getProperies() {
-        return properies;
+    public Collection<ComponentProperty> getProperties() {
+        return properties;
     }
 
-    public void setProperies(Collection<ComponentProperty> properies) {
-        this.properies = properies;
+    public void setProperties(Collection<ComponentProperty> properties) {
+        this.properties = properties;
     }
 }

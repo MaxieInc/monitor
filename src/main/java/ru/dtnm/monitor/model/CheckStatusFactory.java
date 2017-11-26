@@ -11,6 +11,7 @@ import ru.dtnm.monitor.model.status.CheckStatusResponse;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -32,19 +33,20 @@ public class CheckStatusFactory {
     public static CheckStatusResponse status(final MonitoringResult monitoringResult, final ComponentConfig componentConfig) throws IOException {
         final CheckStatusResponse response = new CheckStatusResponse();
         final List<CheckStatus> statuses = new ArrayList<>();
-        // 1. Проверка на соответствие тела HTTP-ответа и статуса компонента
-        statuses.add(checkResponseStrings("200 ok", componentConfig.getResponses()));
+        // 1. Проверка на соответствие HTTP - статуса ответа и конфига, и таймаут
+        statuses.add(checkResponseStrings(monitoringResult.getHttpStatus(), componentConfig.getResponses()));
         // 2. Проверка по KeepAlive
         final Date now = new Date();
-        statuses.add(now.getTime() - monitoringResult.getLastOnline().getTime() < componentConfig.getKeepAlive()
+        statuses.add(now.getTime() - monitoringResult.getLastOnline().getTime() > componentConfig.getKeepAlive()
                 ? CheckStatus.FAILED
                 : CheckStatus.HEALTHY);
-        // 3. Проверка на таймаут
-        // todo Реализовать
-        // 4. Проверка по числовым метрикам
-        statuses.addAll(checkMetrics(componentConfig.getMetrics(), monitoringResult.getComponentData().getMetrics()));
-        // 5. Проверка по пропертям
-        statuses.addAll(checkProperties(componentConfig.getProperties(), monitoringResult.getComponentData().getProperies()));
+
+        if (monitoringResult.getComponentData() != null) {
+            // 3. Проверка по числовым метрикам
+            statuses.addAll(checkMetrics(componentConfig.getMetrics(), monitoringResult.getComponentData().getMetrics()));
+            // 4. Проверка по строковым свойствам
+            statuses.addAll(checkProperties(componentConfig.getProperties(), monitoringResult.getComponentData().getProperties()));
+        }
 
         response.setLastResponse(monitoringResult);
         response.setStatus(statuses.stream().reduce(CheckStatus::getWorst).orElse(CheckStatus.UNKNOWN));
@@ -54,17 +56,34 @@ public class CheckStatusFactory {
     /**
      * Проверка статуса по маске тела ответа
      *
-     * @param responseString тело ответа
+     * @param status тело ответа
      * @param componentResponses описание масок ответов для статусов
      */
-    private static CheckStatus checkResponseStrings(final String responseString, final ComponentResponses componentResponses) {
-        // todo реализовать поиск по регулярному выражению
-        if (componentResponses.getHealthy().contains(responseString)) return CheckStatus.HEALTHY;
-        else if (componentResponses.getWarning().contains(responseString)) return CheckStatus.WARNING;
-        else if (componentResponses.getCritical().contains(responseString)) return CheckStatus.CRITICAL;
-        else if (componentResponses.getFailed().contains(responseString)) return CheckStatus.FAILED;
-        else if (responseString.toLowerCase().contains("timeout")) return CheckStatus.valueOf(componentResponses.getTimeout());
+    private static CheckStatus checkResponseStrings(final Integer status, final ComponentResponses componentResponses) {
+        if (status == null) { // статуса нет - не получили ответа за указанное время, обработка таймаута
+            return CheckStatus.valueOf(componentResponses.getTimeout());
+        } else if (matches(status, componentResponses.getHealthy())) return CheckStatus.HEALTHY;
+        else if (matches(status, componentResponses.getWarning())) return CheckStatus.WARNING;
+        else if (matches(status, componentResponses.getCritical())) return CheckStatus.CRITICAL;
+        else if (matches(status, componentResponses.getFailed())) return CheckStatus.FAILED;
         else return CheckStatus.valueOf(componentResponses.getOthers());
+    }
+
+    /**
+     * Проверяет, соответствует ли статус набору шаблонов
+     *
+     * @param status статус
+     * @param patterns шаблоны
+     */
+    private static boolean matches(final Integer status, final Collection<String> patterns) {
+        if (status == null) return false;
+        final String statusString = String.valueOf(status);
+        return patterns
+                .stream()
+                .map(e -> Pattern.compile(e).matcher(statusString).matches())
+                .filter(e -> true)
+                .findFirst()
+                .orElse(false);
     }
 
     /**
@@ -88,6 +107,12 @@ public class CheckStatusFactory {
         return statuses;
     }
 
+    /**
+     * Сравнивает строковые свойства ответа и конфига
+     *
+     * @param configProperties конфигурация строковых свойств
+     * @param realProperties реальные строковые свойства из ответа компонента
+     */
     private static List<CheckStatus> checkProperties(final Collection<ComponentProperty> configProperties, final Collection<ComponentProperty> realProperties) {
         final List<CheckStatus> statuses = new ArrayList<>();
         final Map<String, ComponentProperty> realPropsMap = realProperties.stream().collect(Collectors.toMap(ComponentProperty::getMnemo, e -> e));

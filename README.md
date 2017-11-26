@@ -13,3 +13,24 @@
 2. **ГЕТ** на УРЛ http://localhost:8888/monitor/config/refresh - перечитывает текущую конфигурацию из файлов
 3. **ГЕТ** на УРЛ http://localhost:8888/monitor/info/all - все результаты мониторинга, по всем опрашиваемым колмпонентам
 4. **ГЕТ** на УРЛ http://localhost:8888/monitor/info/{component_mnemo} - результат опроса указанного компонента
+5. **ПОСТ** на УРЛ http://localhost:8888/monitor/accept/{component_mnemo} - отправить в монитор сообщение о состоянии компонента. Принимается JSON в UTF-8 вида:
+{
+  "metrics": [
+    {
+      "mnemo": "some.metric.mnemo.1"
+      "value": 12.5 
+    },
+    ...
+    {
+      "mnemo": "some.metric.mnemo.n"
+      "value": 14
+    }
+  ],
+  "properties": [
+        {
+            "mnemo": "url"
+            "value": "http://yandex.ru"
+        }
+  ],
+}
+Такой же ответ ожидается от конкретного компонента при опросе его монитором. 

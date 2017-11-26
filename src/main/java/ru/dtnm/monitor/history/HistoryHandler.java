@@ -44,19 +44,19 @@ public class HistoryHandler {
     /**
      * Записывает результат последнего опроса в файл
      *
-     * @param currentResponse результат
+     * @param queryResult результат
      * @param componentConfig информация о компоненте
      * @param alertConfig информация об уведомлениях
      */
-    public void handleQuery(final MonitoringResult currentResponse, final ComponentConfig componentConfig, final AlertConfig alertConfig) {
-        LOG.debug(">> handleQuery for mnemo={} and componentResponse={}", currentResponse.getMnemo(), currentResponse);
+    public void handleQuery(final MonitoringResult queryResult, final ComponentConfig componentConfig, final AlertConfig alertConfig) {
+        LOG.debug(">> handleQuery for mnemo={} and componentResponse={}", queryResult.getMnemo(), queryResult);
         // Если не заполнено в чекере - значит, неудачный опрос и надо поднимать предыдущие результаты
-        if (currentResponse.getLastOnline() == null) {
-            final MonitoringResult lastResponse = getLastCheckResult(currentResponse.getMnemo()).getLastResponse();
-            currentResponse.setLastOnline(lastResponse.getLastOnline());
+        if (queryResult.getLastOnline() == null) {
+            final MonitoringResult lastResponse = getLastCheckResult(queryResult.getMnemo()).getLastResponse();
+            queryResult.setLastOnline(lastResponse.getLastOnline());
         }
         try {
-            final CheckStatusResponse stored = CheckStatusFactory.status(currentResponse, componentConfig);
+            final CheckStatusResponse stored = CheckStatusFactory.status(queryResult, componentConfig);
             // Запись данных
             writeHistory(stored);
             // Уведомление пользователей
@@ -65,7 +65,7 @@ public class HistoryHandler {
                     .stream()
                     .filter(e -> e.getStatus().equals(stored.getStatus()))
                     .collect(Collectors.toList());
-            alertHandler.notify(currentResponse.getMnemo(), actions);
+            alertHandler.notify(queryResult.getMnemo(), actions);
         } catch (IOException ioe) {
             LOG.error("Unable to handle query result! {}", ioe.getMessage(), ioe);
         }
