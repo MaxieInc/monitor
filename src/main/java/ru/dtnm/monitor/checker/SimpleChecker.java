@@ -4,15 +4,19 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.dtnm.monitor.history.HistoryHandler;
-import ru.dtnm.monitor.model.query.ComponentResponse;
+import ru.dtnm.monitor.model.config.component.ComponentConfig;
+import ru.dtnm.monitor.model.query.ComponentData;
+import ru.dtnm.monitor.model.query.MonitoringResult;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
-import ru.dtnm.monitor.model.config.component.ComponentInfo;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 
@@ -34,41 +38,49 @@ public class SimpleChecker extends Checker {
      * @param historyHandler
      */
     public void check (final HistoryHandler historyHandler) {
-        final ComponentResponse componentResponse = new ComponentResponse()
-                .setMnemo(componentInfo.getMnemo())
-                .setUrl(componentInfo.getUrl());
+        final MonitoringResult monitoringResult = new MonitoringResult()
+                .setMnemo(this.componentConfig.getMnemo())
+                .setUrl(this.componentConfig.getUrl());
         final HttpClient httpClient = getClient();
         final Date startDate = new Date();
         Date endDate = null;
-        try {
-            final HttpGet get = new HttpGet(componentInfo.getUrl());
-            final HttpResponse response = httpClient.execute(get);
+        ComponentData componentData = null;
+        try (CloseableHttpClient client = getClient()) {
+            final HttpGet get = new HttpGet(this.componentConfig.getUrl());
+            final HttpResponse response = client.execute(get);
             endDate = new Date();
-            componentResponse.setLastOnline(endDate);
-
-            componentResponse
+            try {
+                final String responseString = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+                LOG.debug("response is: {}", responseString);
+                componentData = MAPPER.readValue(responseString, ComponentData.class);
+            } catch (Exception e) {
+                LOG.error("Unable to parse ComponentData!");
+            }
+            monitoringResult
+                    .setLastOnline(endDate)
+                    .setComponentData(componentData)
                     .setHttpStatus(response.getStatusLine().getStatusCode())
                     .setResponseDuration(endDate.getTime() - startDate.getTime());
-            historyHandler.handleQuery(componentResponse, componentInfo, alertConfig);
+            historyHandler.handleQuery(monitoringResult, this.componentConfig, alertConfig);
         } catch (IOException ioe) {
             LOG.error("Unable to perform check: {}", ioe.getMessage(), ioe);
-            historyHandler.handleQuery(componentResponse.setComment(ioe.getMessage()), componentInfo, alertConfig);
+            historyHandler.handleQuery(monitoringResult.setComment(ioe.getMessage()), this.componentConfig, alertConfig);
         }
     }
 
-    public SimpleChecker(final ComponentInfo componentInfo, final AlertConfig alertConfig) {
-        super(componentInfo, alertConfig);
+    public SimpleChecker(final ComponentConfig componentConfig, final AlertConfig alertConfig) {
+        super(componentConfig, alertConfig);
     }
 
     /**
      * Конструирует Http-клиент
      */
-    private HttpClient getClient() {
-        if (componentInfo.getTimeout() != null) {
+    private CloseableHttpClient getClient() {
+        if (componentConfig.getTimeout() != null) {
             final RequestConfig requestConfig = RequestConfig.custom()
-                    .setSocketTimeout(componentInfo.getTimeout())
-                    .setConnectTimeout(componentInfo.getTimeout())
-                    .setConnectionRequestTimeout(componentInfo.getTimeout())
+                    .setSocketTimeout(componentConfig.getTimeout())
+                    .setConnectTimeout(componentConfig.getTimeout())
+                    .setConnectionRequestTimeout(componentConfig.getTimeout())
                     .build();
             return HttpClients.custom()
                 .setDefaultRequestConfig(requestConfig)

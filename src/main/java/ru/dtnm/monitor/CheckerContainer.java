@@ -14,9 +14,8 @@ import ru.dtnm.monitor.checker.SimpleChecker;
 import ru.dtnm.monitor.history.HistoryHandler;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
 import ru.dtnm.monitor.model.config.alert.AlertConfigContainer;
-import ru.dtnm.monitor.model.config.component.ComponentInfo;
+import ru.dtnm.monitor.model.config.component.ComponentConfig;
 import ru.dtnm.monitor.model.config.component.MonitorConfig;
-import ru.dtnm.monitor.notification.AlertHandler;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
@@ -47,9 +46,6 @@ public class CheckerContainer {
 
     @Autowired
     private HistoryHandler historyHandler;
-
-    @Autowired
-    private AlertHandler alertHandler;
 
     @Value("${monitor.config.location:null}")
     private String monitorConfigLocation;
@@ -88,13 +84,28 @@ public class CheckerContainer {
 
     /**
      * Возвращает конфигурацию указанного компонента
-     * @param mnemo
+     *
+     * @param mnemo мнемо компонента
      */
-    public ComponentInfo getConfigByMnemo(final String mnemo) throws IOException {
+    public ComponentConfig getConfigByMnemo(final String mnemo) throws IOException {
         return getConfig(monitorConfigLocation, MonitorConfig.class)
                 .getComponents()
                 .stream()
                 .filter(e -> e.getMnemo().equals(mnemo))
+                .findFirst()
+                .get();
+    }
+
+    /**
+     * Возвращает конфигурацию оповещений для указанного компонента
+     *
+     * @param mnemo мнемо компонента
+     */
+    public AlertConfig getAlertConfigByMnemo(final String mnemo) throws IOException {
+        return getConfig(alertConfigLocation, AlertConfigContainer.class)
+                .getAlertConfigs()
+                .stream()
+                .filter(e -> e.getComponent().equals(mnemo))
                 .findFirst()
                 .get();
     }

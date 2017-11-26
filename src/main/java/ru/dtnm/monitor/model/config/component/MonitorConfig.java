@@ -11,14 +11,14 @@ import java.util.List;
  */
 public class MonitorConfig {
 
-    private List<ComponentInfo> components;
+    private List<ComponentConfig> components;
 
 
-    public List<ComponentInfo> getComponents() {
+    public List<ComponentConfig> getComponents() {
         return components;
     }
 
-    public void setComponents(List<ComponentInfo> components) {
+    public void setComponents(List<ComponentConfig> components) {
         this.components = components;
     }
 }

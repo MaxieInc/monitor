@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.dtnm.monitor.CheckerContainer;
 import ru.dtnm.monitor.history.HistoryHandler;
 import ru.dtnm.monitor.model.status.CheckStatus;
-import ru.dtnm.monitor.model.CheckStatusFactory;
-import ru.dtnm.monitor.model.config.component.ComponentInfo;
-import ru.dtnm.monitor.model.query.ComponentResponse;
+import ru.dtnm.monitor.model.query.MonitoringResult;
 import ru.dtnm.monitor.model.status.CheckStatusResponse;
 
 import javax.ws.rs.core.MediaType;
@@ -62,7 +60,7 @@ public class MonitorService {
                     } catch (IOException ioe) {
                         return new CheckStatusResponse()
                                 .setStatus(CheckStatus.UNKNOWN)
-                                .setLastResponse(new ComponentResponse().setComment(ioe.getMessage()));
+                                .setLastResponse(new MonitoringResult().setComment(ioe.getMessage()));
                     }
                 })
                 .collect(Collectors.toList());

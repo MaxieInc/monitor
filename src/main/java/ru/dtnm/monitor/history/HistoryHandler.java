@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import ru.dtnm.monitor.model.CheckStatusFactory;
 import ru.dtnm.monitor.model.config.alert.AlertAction;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
-import ru.dtnm.monitor.model.config.component.ComponentInfo;
-import ru.dtnm.monitor.model.query.ComponentResponse;
+import ru.dtnm.monitor.model.config.component.ComponentConfig;
+import ru.dtnm.monitor.model.query.MonitoringResult;
 import ru.dtnm.monitor.model.status.CheckStatusResponse;
 import ru.dtnm.monitor.notification.AlertHandler;
 
@@ -45,18 +45,18 @@ public class HistoryHandler {
      * Записывает результат последнего опроса в файл
      *
      * @param currentResponse результат
-     * @param componentInfo информация о компоненте
+     * @param componentConfig информация о компоненте
      * @param alertConfig информация об уведомлениях
      */
-    public void handleQuery(final ComponentResponse currentResponse, final ComponentInfo componentInfo, final AlertConfig alertConfig) {
+    public void handleQuery(final MonitoringResult currentResponse, final ComponentConfig componentConfig, final AlertConfig alertConfig) {
         LOG.debug(">> handleQuery for mnemo={} and componentResponse={}", currentResponse.getMnemo(), currentResponse);
         // Если не заполнено в чекере - значит, неудачный опрос и надо поднимать предыдущие результаты
         if (currentResponse.getLastOnline() == null) {
-            final ComponentResponse lastResponse = getLastCheckResult(currentResponse.getMnemo()).getLastResponse();
+            final MonitoringResult lastResponse = getLastCheckResult(currentResponse.getMnemo()).getLastResponse();
             currentResponse.setLastOnline(lastResponse.getLastOnline());
         }
         try {
-            final CheckStatusResponse stored = CheckStatusFactory.status(currentResponse, componentInfo);
+            final CheckStatusResponse stored = CheckStatusFactory.status(currentResponse, componentConfig);
             // Запись данных
             writeHistory(stored);
             // Уведомление пользователей

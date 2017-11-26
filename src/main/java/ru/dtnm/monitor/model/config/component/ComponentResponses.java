@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
- * <p>Конфиг: Соответствие HTTP-ответа и статуса компонента</p>
+ * <p>Конфиг: Соответствие маски HTTP-ответа и статуса компонента</p>
  * @author Яковлев В.Л.
  */
 public class ComponentResponses implements Serializable {

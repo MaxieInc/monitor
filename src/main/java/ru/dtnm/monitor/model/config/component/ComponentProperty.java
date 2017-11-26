@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class ComponentProperty implements Serializable {
 
     private String mnemo;
+    private String value;
     private boolean mandatory;
     private String special;
 
@@ -19,6 +20,15 @@ public class ComponentProperty implements Serializable {
 
     public void setMnemo(String mnemo) {
         this.mnemo = mnemo;
+    }
+
+    /** [Необязательное] Строковое значение строкового свойства компонента */
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     /** [Обязательный] Признак обязательности строкового свойства компонента */
