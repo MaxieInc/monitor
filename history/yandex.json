@@ -1,1 +1,1 @@
-{"status":"HEALTHY","lastResponse":{"mnemo":"yandex","url":"http://yandex.ru","httpStatus":200,"responseDuration":453,"lastOnline":1512840340944,"comment":null,"componentData":null}}
+{"status":"FAILED","lastResponse":{"mnemo":"yandex","url":"https://isales.trcont.com/account-back/auth/login","httpStatus":405,"responseDuration":62,"lastOnline":1512841446232,"comment":null,"componentData":{"metrics":null,"properties":null}}}

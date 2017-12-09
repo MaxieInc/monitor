@@ -7,6 +7,7 @@ var timer = null;
 var SPINNER_SHOW_TIMEOUT = 300;   // 300мс виден спиннер
 var spinnerTimer = null;
 
+/** Отрисовывает страницу */
 function drawPage() {
     $('#monitor_location').append('Приложение мониторинга: ' + MONITOR_APPLICATION_ADDRESS);
     $('#refresh_interval').attr('value', MONITOR_REFRESH_PERIOD / 1000);
@@ -23,6 +24,7 @@ function startRefresh() {
     startTimer();
 }
 
+/** Останов периодического опроса приложения мониторинга */
 function stopRefresh() {
     $('#refresh_btn').attr('value', 'Опрашивать');
     $('#refresh_btn').attr('onclick', 'startRefresh()');
@@ -73,13 +75,13 @@ function redrawMonitorPage(data) {
         var lastResponse = component.lastResponse;
         var element = $('<div></div>');
 
-        var elementId = lastResponse['mnemo'];
+        var elementId = lastResponse.mnemo;
         $(element).attr('id', elementId);
-        $(element).attr('class', 'column ' + component['status']);
+        $(element).attr('class', 'column ' + component.status);
         $(element).attr('title', component.status);
 
-        $('<p>Имя компонента: ' + lastResponse.mnemo + '</p>').appendTo(element);
-        $('<p>Адрес: ' + lastResponse.url + '</p>').appendTo(element);
+        $('<p>Мнемо компонента: ' + lastResponse.mnemo + '</p>').appendTo(element);
+        $('<p title="' + lastResponse.url + '">Адрес: ' + lastResponse.url + '</p>').appendTo(element);
         $('<p>HTTP - статус: ' + lastResponse.httpStatus + '</p>').appendTo(element);
         $('<p>Длительность ответа: ' + lastResponse.responseDuration + 'мс</p>').appendTo(element);
         var date = new Date(lastResponse.lastOnline);

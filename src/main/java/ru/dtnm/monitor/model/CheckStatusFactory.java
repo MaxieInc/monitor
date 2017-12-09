@@ -95,14 +95,16 @@ public class CheckStatusFactory {
     private static List<CheckStatus> checkMetrics(final Collection<ComponentMetric> configMetrics,  final Collection<ComponentDataMetric> realMetrics) {
         final List<CheckStatus> statuses = new ArrayList<>();
         final Map<String, ComponentMetric> configMetricsMap = configMetrics.stream().collect(Collectors.toMap(ComponentMetric::getMnemo, e -> e));
-        for (ComponentDataMetric realMetric : realMetrics) {
-            final ComponentMetric configMetric = configMetricsMap.get(realMetric.getMnemo());
-            if (configMetric != null) {
-                if (realMetric.inInterval(configMetric.getHealthy())) statuses.add(CheckStatus.HEALTHY);
-                else if (realMetric.inInterval(configMetric.getWarning())) statuses.add(CheckStatus.WARNING);
-                else if (realMetric.inInterval(configMetric.getCritical())) statuses.add(CheckStatus.CRITICAL);
-                else if (realMetric.inInterval(configMetric.getFailed())) statuses.add(CheckStatus.FAILED);
-            } else statuses.add(CheckStatus.UNKNOWN);
+        if (realMetrics != null) {
+            for (ComponentDataMetric realMetric : realMetrics) {
+                final ComponentMetric configMetric = configMetricsMap.get(realMetric.getMnemo());
+                if (configMetric != null) {
+                    if (realMetric.inInterval(configMetric.getHealthy())) statuses.add(CheckStatus.HEALTHY);
+                    else if (realMetric.inInterval(configMetric.getWarning())) statuses.add(CheckStatus.WARNING);
+                    else if (realMetric.inInterval(configMetric.getCritical())) statuses.add(CheckStatus.CRITICAL);
+                    else if (realMetric.inInterval(configMetric.getFailed())) statuses.add(CheckStatus.FAILED);
+                } else statuses.add(CheckStatus.UNKNOWN);
+            }
         }
         return statuses;
     }
@@ -115,17 +117,21 @@ public class CheckStatusFactory {
      */
     private static List<CheckStatus> checkProperties(final Collection<ComponentProperty> configProperties, final Collection<ComponentProperty> realProperties) {
         final List<CheckStatus> statuses = new ArrayList<>();
-        final Map<String, ComponentProperty> realPropsMap = realProperties.stream().collect(Collectors.toMap(ComponentProperty::getMnemo, e -> e));
-        for (ComponentProperty configProperty : configProperties) {
-            ComponentProperty realProperty = realPropsMap.remove(configProperty.getMnemo());
-            if (realProperty == null) {
-                statuses.add(configProperty.isMandatory() ? CheckStatus.FAILED : CheckStatus.WARNING);
-            } else if (configProperty.getValue() != null) {
-                statuses.add(configProperty.getValue().equals(realProperty.getValue()) ? CheckStatus.HEALTHY : CheckStatus.WARNING);
+        if (realProperties != null) {
+            final Map<String, ComponentProperty> realPropsMap = realProperties
+                    .stream()
+                    .collect(Collectors.toMap(ComponentProperty::getMnemo, e -> e));
+            for (ComponentProperty configProperty : configProperties) {
+                ComponentProperty realProperty = realPropsMap.remove(configProperty.getMnemo());
+                if (realProperty == null) {
+                    statuses.add(configProperty.isMandatory() ? CheckStatus.FAILED : CheckStatus.WARNING);
+                } else if (configProperty.getValue() != null) {
+                    statuses.add(configProperty.getValue().equals(realProperty.getValue()) ? CheckStatus.HEALTHY : CheckStatus.WARNING);
+                }
             }
-        }
-        if (realPropsMap.keySet().size() > 0) {
-            statuses.add(CheckStatus.UNKNOWN);
+            if (realPropsMap.keySet().size() > 0) {
+                statuses.add(CheckStatus.UNKNOWN);
+            }
         }
         return statuses;
     }
