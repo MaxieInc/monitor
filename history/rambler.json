@@ -1,11 +1,1 @@
-{
-  "status": "FAILED",
-  "lastResponse": {
-    "mnemo": "yandex",
-    "url": "http://yandex.ru",
-    "httpStatus": 200,
-    "responseDuration": 46,
-    "lastOnline": 1510993421278,
-    "comment": null
-  }
-}
+{"status":"UNKNOWN","lastResponse":{"mnemo":"rambler","url":"http://rambler.ru","httpStatus":200,"responseDuration":79,"lastOnline":1512840111002,"comment":null}}

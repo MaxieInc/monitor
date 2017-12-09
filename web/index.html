@@ -2,9 +2,91 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Монитор</title>
-</head>
-<body>
+    <title>Мониторинг компонентов</title>
+    <link rel="shortcut icon" type="image/png" href="./img/favicon.ico"/>
 
+    <script src="./config/siteConfig.js"></script>
+
+    <!-- date.js -->
+    <script src="./lib/date.js"></script>
+
+    <!-- JQuery -->
+    <script src="./lib/jquery-3.2.1/jquery-3.2.1.js"></script>
+
+    <!-- JQuery UI custom-->
+    <link rel="stylesheet" type="text/css" href="./lib/jquery-ui-1.12.1.custom/jquery-ui.css">
+
+    <!-- Собственные -->
+    <script src="./js/monitor.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+</head>
+<body onload="drawPage()">
+    <div id="main">
+        <div id="caption">
+            <h1>Мониторинг компонентов</h1>
+            <h2 id="monitor_location"></h2>
+        </div>
+        <div id="monitoring_container_parent">
+            <div id="refresh_settings" style="text-align: left;">
+                <p style="margin:5px 0 5px 5px; height: 40px">
+                    <h4 id="refresh_enabled" style="display: inline;">Обновление выключено</h4>
+                    <input type="button" id="refresh_btn" value="Опрашивать" onclick="startRefresh()" class="ui-button ui-widget" style="width: 150px; margin: 0 445px 0 15px">
+                    Периодичность:
+                    <input type="number" id="refresh_interval" value="5" style="width: 50px; margin: 0 15px 0 15px;">
+                    с.
+                    <img id="refresh_indicator" src="./img/process.gif" height="25px" style="margin-left: 15px; margin-bottom: -6px;" hidden>
+                </p>
+            </div>
+            <div id="monitoring_container">
+                <div id="component_yandex" class="column FAILED">
+                    <p>Имя компонента: yandex</p>
+                    <p>Адрес: http://yandex.ru</p>
+                    <p>Статус http: 200</p>
+                    <p>Длительность ответа: 245мс</p>
+                    <p>Последний ответ: 25.01.2015 13:14:22</p>
+                </div>
+
+                <div id="component_google" class="column WARNING">
+                    <p>Имя компонента: google</p>
+                    <p>Адрес: http://google.com</p>
+                    <p>Статус http: 204</p>
+                    <p>Длительность ответа: 175мс</p>
+                    <p>Последний ответ: 25.01.2015 18:14:22</p>
+                </div>
+
+                <div id="component_google2" class="column WARNING">
+                    <p>Имя компонента: google</p>
+                    <p>Адрес: http://google.com</p>
+                    <p>Статус http: 204</p>
+                    <p>Длительность ответа: 175мс</p>
+                    <p>Последний ответ: 25.01.2015 18:14:22</p>
+                </div>
+
+                <div id="component_rambler" class="column NOT_CHECKED">
+                    <p>Имя компонента: google</p>
+                    <p>Адрес: http://google.com</p>
+                    <p>Статус http: 204</p>
+                    <p>Длительность ответа: 175мс</p>
+                    <p>Последний ответ: 25.01.2015 18:14:22</p>
+                </div>
+
+                <div id="component_test" class="column CRITICAL">
+                    <p>Имя компонента: google</p>
+                    <p>Адрес: http://google.com</p>
+                    <p>Статус http: 204</p>
+                    <p>Длительность ответа: 175мс</p>
+                    <p>Последний ответ: 25.01.2015 18:14:22</p>
+                </div>
+
+                <div id="component_test2" class="column HEALTHY">
+                    <p>Имя компонента: google</p>
+                    <p>Адрес: http://google.com</p>
+                    <p>Статус http: 204</p>
+                    <p>Длительность ответа: 175мс</p>
+                    <p>Последний ответ: 25.01.2015 18:14:22</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

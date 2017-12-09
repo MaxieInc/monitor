@@ -1,0 +1,73 @@
+#main {
+    text-align: center;
+    font-weight: bold;
+    color: #333333;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: #ededed;
+}
+
+#monitoring_container_parent {
+    position: relative;
+    margin: 0 auto;
+    padding: 0;
+    width: 1135px;
+    height: 100%;
+}
+
+#refresh_settings {
+    margin: 10px 0 0 20px;
+}
+
+#monitoring_container {
+    background-color: #252525;
+    position: relative;
+    margin: 0 auto;
+    padding: 0;
+    width: 1135px;
+    height: 100%;
+}
+
+.column {
+    display: inline-block;
+    text-align: left;
+    padding-left: 15px;
+    margin: 10px 0 0 10px;
+    float: left;
+    width: 350px;
+}
+
+.column p {
+    font-size: 14pt;
+    padding: 5px;
+    margin: 0;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.NOT_CHECKED {
+    background-color: lightgray;
+}
+.HEALTHY {
+    background-color: lightgreen;
+}
+.WARNING {
+    background-color: yellow;
+}
+.CRITICAL {
+    background-color: orange;
+}
+.FAILED {
+    background-color: red;
+    color: black;
+}
+.UNKNOWN {
+    background-color: darkgray;
+}
+

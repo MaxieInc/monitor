@@ -24,6 +24,56 @@
         "failed": [1001, 180000]
       }],
       "properties": []
+    },
+    {
+      "mnemo": "google",
+      "caption": "Гугл",
+      "descr": "Мониторинг сайта Гугл - для массовости",
+      "url": "http://google.com",
+      "keepAlive": 180000,
+      "timeout": 1000,
+      "responses": {
+        "healthy": [],
+        "warning": [],
+        "critical": [],
+        "failed": [],
+        "others": "WARNING",
+        "timeout": "WARNING"
+      },
+      "metrics": [{
+        "mnemo": "metric.mnemo",
+        "mandatory": true,
+        "healthy": [0, 100],
+        "warning": [100, 250],
+        "critical": [251, 1000],
+        "failed": [1001, 180000]
+      }],
+      "properties": []
+    },
+    {
+      "mnemo": "rambler",
+      "caption": "Рамблер, например",
+      "descr": "Мониторинг рамблера - просто так",
+      "url": "http://rambler.ru",
+      "keepAlive": 180000,
+      "timeout": 1000,
+      "responses": {
+        "healthy": [200],
+        "warning": [],
+        "critical": [],
+        "failed": [500],
+        "others": "UNKNOWN",
+        "timeout": "HEALTHY"
+      },
+      "metrics": [{
+        "mnemo": "metric.mnemo",
+        "mandatory": true,
+        "healthy": [0, 100],
+        "warning": [100, 250],
+        "critical": [251, 1000],
+        "failed": [1001, 180000]
+      }],
+      "properties": []
     }
   ]
 }
