@@ -58,6 +58,7 @@ function refresh() {
     spinnerTimer = setTimeout(function() {
         $('#refresh_indicator').attr('hidden', true);
     }, SPINNER_SHOW_TIMEOUT);
+    $('#monitoring_container').empty();
     jQuery.get(MONITOR_APPLICATION_ADDRESS + MONITOR_INFO_URL, null, redrawMonitorPage);
 }
 
@@ -67,9 +68,6 @@ function refresh() {
  * @param data данные (JSON-объект) в ответе от сервиса монитора
  */
 function redrawMonitorPage(data) {
-    var container = $('#monitoring_container');
-    container.empty();
-
     for (var i = 0; i < data.length; i++) {
         var component = data[i];
         var lastResponse = component.lastResponse;

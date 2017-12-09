@@ -1,1 +1,1 @@
-{"status":"FAILED","lastResponse":{"mnemo":"yandex","url":"https://isales.trcont.com/account-back/auth/login","httpStatus":405,"responseDuration":62,"lastOnline":1512841446232,"comment":null,"componentData":{"metrics":null,"properties":null}}}
+{"status":"FAILED","lastResponse":{"mnemo":"yandex","url":"https://isales.trcont.com/account-back/auth/login","httpStatus":405,"responseDuration":78,"lastOnline":1512841483845,"comment":null,"componentData":{"metrics":null,"properties":null}}}
