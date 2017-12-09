@@ -1,8 +1,10 @@
 package ru.dtnm.monitor.checker;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.dtnm.monitor.history.HistoryHandler;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
-import ru.dtnm.monitor.model.config.component.ComponentInfo;
+import ru.dtnm.monitor.model.config.component.ComponentConfig;
 
 /**
  * @author M.Belolipov
@@ -11,16 +13,19 @@ import ru.dtnm.monitor.model.config.component.ComponentInfo;
  */
 public abstract class Checker {
 
-    protected ComponentInfo componentInfo;
+    protected static final ObjectMapper MAPPER = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    protected ComponentConfig componentConfig;
     protected AlertConfig alertConfig;
 
     /** Возвращает собственную конфигурацию компонента */
-    public ComponentInfo getComponentInfo() {
-        return componentInfo;
+    public ComponentConfig getComponentConfig() {
+        return componentConfig;
     }
 
-    public void setComponentInfo(ComponentInfo componentInfo) {
-        this.componentInfo = componentInfo;
+    public void setComponentConfig(ComponentConfig componentConfig) {
+        this.componentConfig = componentConfig;
     }
 
     /** Возвращает конфигурацию уведомлений по компоненту */
@@ -34,8 +39,8 @@ public abstract class Checker {
 
     public abstract void check(HistoryHandler historyHandler);
 
-    public Checker(ComponentInfo componentInfo, AlertConfig alertConfig) {
-        this.componentInfo = componentInfo;
+    public Checker(ComponentConfig componentConfig, AlertConfig alertConfig) {
+        this.componentConfig = componentConfig;
         this.alertConfig = alertConfig;
     }
 }

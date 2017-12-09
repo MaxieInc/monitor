@@ -7,7 +7,7 @@ import java.util.Collection;
  * <p>Конфиг: Компонент для мониторинга</p>
  * @author Яковлев В.Л.
  */
-public class ComponentInfo implements Serializable {
+public class ComponentConfig implements Serializable {
 
     private String mnemo;
     private String caption;

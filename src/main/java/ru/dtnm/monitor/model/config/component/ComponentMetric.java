@@ -11,10 +11,10 @@ public class ComponentMetric implements Serializable {
 
     private String mnemo;
     private boolean mandatory;
-    private Collection<Float> healthy;
-    private Collection<Float> warning;
-    private Collection<Float> critical;
-    private Collection<Float> failed;
+    private Float[] healthy;
+    private Float[] warning;
+    private Float[] critical;
+    private Float[] failed;
 
     /** [Обязательный] Строковый мнемокод числовой метрики компонента */
     public String getMnemo() {
@@ -35,38 +35,38 @@ public class ComponentMetric implements Serializable {
     }
 
     /** [Обязательный] Интервал значений для состояния: "Зеленый" */
-    public Collection<Float> getHealthy() {
+    public Float[] getHealthy() {
         return healthy;
     }
 
-    public void setHealthy(Collection<Float> healthy) {
+    public void setHealthy(Float[] healthy) {
         this.healthy = healthy;
     }
 
     /** [Обязательный] Интервал значений для состояния: "Желтый" */
-    public Collection<Float> getWarning() {
+    public Float[] getWarning() {
         return warning;
     }
 
-    public void setWarning(Collection<Float> warning) {
+    public void setWarning(Float[] warning) {
         this.warning = warning;
     }
 
     /** [Обязательный] Интервал значений для состояния: "Оранжевый" */
-    public Collection<Float> getCritical() {
+    public Float[] getCritical() {
         return critical;
     }
 
-    public void setCritical(Collection<Float> critical) {
+    public void setCritical(Float[] critical) {
         this.critical = critical;
     }
 
     /** [Обязательный] Интервал значений для состояния: "Красный" */
-    public Collection<Float> getFailed() {
+    public Float[] getFailed() {
         return failed;
     }
 
-    public void setFailed(Collection<Float> failed) {
+    public void setFailed(Float[] failed) {
         this.failed = failed;
     }
 }

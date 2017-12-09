@@ -10,20 +10,35 @@ import java.util.Date;
  * @version 0.1
  * @since 2017-11-05
  */
-public class ComponentResponse implements Serializable {
+public class MonitoringResult implements Serializable {
 
+    /** Мнемоника компонента */
     private String mnemo;
+
+    /** УРЛ опрашиваемого компонента */
     private String url;
+
+    /** Статус опроса компонента */
     private Integer httpStatus;
+
+    /** Длительность опроса */
     private Long responseDuration;
+
+    /** Последняя связь с компонентом */
     private Date lastOnline;
+
+    /** Комментарий */
     private String comment;
+
+    /** Данные в ответе компонента */
+    private ComponentData componentData;
+
 
     public String getMnemo() {
         return mnemo;
     }
 
-    public ComponentResponse setMnemo(String mnemo) {
+    public MonitoringResult setMnemo(String mnemo) {
         this.mnemo = mnemo;
         return this;
     }
@@ -32,7 +47,7 @@ public class ComponentResponse implements Serializable {
         return url;
     }
 
-    public ComponentResponse setUrl(String url) {
+    public MonitoringResult setUrl(String url) {
         this.url = url;
         return this;
     }
@@ -41,7 +56,7 @@ public class ComponentResponse implements Serializable {
         return httpStatus;
     }
 
-    public ComponentResponse setHttpStatus(Integer httpStatus) {
+    public MonitoringResult setHttpStatus(Integer httpStatus) {
         this.httpStatus = httpStatus;
         return this;
     }
@@ -50,7 +65,7 @@ public class ComponentResponse implements Serializable {
         return responseDuration;
     }
 
-    public ComponentResponse setResponseDuration(Long responseDuration) {
+    public MonitoringResult setResponseDuration(Long responseDuration) {
         this.responseDuration = responseDuration;
         return this;
     }
@@ -59,7 +74,7 @@ public class ComponentResponse implements Serializable {
         return lastOnline;
     }
 
-    public ComponentResponse setLastOnline(Date lastOnline) {
+    public MonitoringResult setLastOnline(Date lastOnline) {
         this.lastOnline = lastOnline;
         return this;
     }
@@ -68,8 +83,17 @@ public class ComponentResponse implements Serializable {
         return comment;
     }
 
-    public ComponentResponse setComment(String comment) {
+    public MonitoringResult setComment(String comment) {
         this.comment = comment;
+        return this;
+    }
+
+    public ComponentData getComponentData() {
+        return componentData;
+    }
+
+    public MonitoringResult setComponentData(ComponentData componentData) {
+        this.componentData = componentData;
         return this;
     }
 
@@ -80,6 +104,6 @@ public class ComponentResponse implements Serializable {
     /**
      * Конcтруктор по умолчанию
      */
-    public ComponentResponse() {
+    public MonitoringResult() {
     }
 }

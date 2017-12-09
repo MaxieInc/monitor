@@ -1,1 +1,1 @@
-{"status":"UNKNOWN","lastResponse":{"mnemo":"rambler","url":"http://rambler.ru","httpStatus":200,"responseDuration":79,"lastOnline":1512840111002,"comment":null}}
+{"status":"HEALTHY","lastResponse":{"mnemo":"rambler","url":"http://rambler.ru","httpStatus":200,"responseDuration":109,"lastOnline":1512840341256,"comment":null,"componentData":null}}

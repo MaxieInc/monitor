@@ -1,9 +1,9 @@
 package ru.dtnm.monitor.model.status;
 
-import ru.dtnm.monitor.model.query.ComponentResponse;
+import ru.dtnm.monitor.model.query.MonitoringResult;
 
 /**
- * Транспорт: статус монитоирнга компонента
+ * Транспорт: статус мониторинга компонента
  *
  * @author M.Belolipov
  * @version 0.1
@@ -12,7 +12,7 @@ import ru.dtnm.monitor.model.query.ComponentResponse;
 public class CheckStatusResponse {
 
     private CheckStatus status;
-    private ComponentResponse lastResponse;
+    private MonitoringResult lastResponse;
 
     public CheckStatus getStatus() {
         return status;
@@ -23,11 +23,11 @@ public class CheckStatusResponse {
         return this;
     }
 
-    public ComponentResponse getLastResponse() {
+    public MonitoringResult getLastResponse() {
         return lastResponse;
     }
 
-    public CheckStatusResponse setLastResponse(ComponentResponse lastResponse) {
+    public CheckStatusResponse setLastResponse(MonitoringResult lastResponse) {
         this.lastResponse = lastResponse;
         return this;
     }

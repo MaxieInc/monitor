@@ -1,1 +1,1 @@
-{"status":"FAILED","lastResponse":{"mnemo":"yandex","url":"http://yandex.ru","httpStatus":200,"responseDuration":578,"lastOnline":1512840110767,"comment":null}}
+{"status":"HEALTHY","lastResponse":{"mnemo":"yandex","url":"http://yandex.ru","httpStatus":200,"responseDuration":453,"lastOnline":1512840340944,"comment":null,"componentData":null}}

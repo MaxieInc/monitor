@@ -22,6 +22,7 @@ public enum CheckStatus {
     }
 
     private String description;
+
     /** Номер для сравнения */
     private int number;
 
@@ -42,7 +43,8 @@ public enum CheckStatus {
     }
 
     /**
-     * Сравнивает два статуса, возвращает худший
+     * Сравнивает два статуса, возвращает "худший"
+     * чем больше номер, тем "хуже" статус
      *
      * @param status сравниваемый статус
      */
