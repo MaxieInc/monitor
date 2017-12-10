@@ -11,12 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.dtnm.monitor.history.HistoryHandler;
 import ru.dtnm.monitor.model.config.component.ComponentConfig;
+import ru.dtnm.monitor.model.config.component.PropMnemoConstant;
 import ru.dtnm.monitor.model.query.ComponentData;
+import ru.dtnm.monitor.model.query.ComponentDataMetric;
 import ru.dtnm.monitor.model.query.MonitoringResult;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -44,7 +47,9 @@ public class SimpleChecker extends Checker {
         final HttpClient httpClient = getClient();
         final Date startDate = new Date();
         Date endDate = null;
-        ComponentData componentData = null;
+        ComponentData componentData = new ComponentData()
+                .setProperties(new ArrayList<>())
+                .setMetrics(new ArrayList<>());
         try (CloseableHttpClient client = getClient()) {
             final HttpGet get = new HttpGet(this.componentConfig.getUrl());
             final HttpResponse response = client.execute(get);
@@ -52,15 +57,24 @@ public class SimpleChecker extends Checker {
             try {
                 final String responseString = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
                 LOG.debug("response is: {}", responseString);
-                componentData = MAPPER.readValue(responseString, ComponentData.class);
+                final ComponentData recieved = MAPPER.readValue(responseString, ComponentData.class);
+                if (recieved.getMetrics() != null) {
+                    componentData.getMetrics().addAll(recieved.getMetrics());
+                }
+                if (recieved.getProperties() != null) {
+                    componentData.getProperties().addAll(recieved.getProperties());
+                }
             } catch (Exception e) {
                 LOG.error("Unable to parse ComponentData!");
             }
             monitoringResult
                     .setLastOnline(endDate)
                     .setComponentData(componentData)
-                    .setHttpStatus(response.getStatusLine().getStatusCode())
-                    .setResponseDuration(endDate.getTime() - startDate.getTime());
+                    .setHttpStatus(response.getStatusLine().getStatusCode());
+
+            // Положим известную нам числовую проперть - длительность вызова
+            monitoringResult.getComponentData().getMetrics().add(new ComponentDataMetric(PropMnemoConstant.CALL_DURATION_MNEMO, (float) (endDate.getTime() - startDate.getTime())));
+
             historyHandler.handleQuery(monitoringResult, this.componentConfig, alertConfig);
         } catch (IOException ioe) {
             LOG.error("Unable to perform check: {}", ioe.getMessage(), ioe);

@@ -41,15 +41,4 @@ public enum CheckStatus {
     public void setNumber(int number) {
         this.number = number;
     }
-
-    /**
-     * Сравнивает два статуса, возвращает "худший"
-     * чем больше номер, тем "хуже" статус
-     *
-     * @param status сравниваемый статус
-     */
-    public CheckStatus getWorst(final CheckStatus status) {
-        if (this.number >= status.number) return this;
-        else return status;
-    }
 }

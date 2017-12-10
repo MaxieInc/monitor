@@ -24,15 +24,17 @@ public class ComponentData {
         return metrics;
     }
 
-    public void setMetrics(Collection<ComponentDataMetric> metrics) {
+    public ComponentData setMetrics(Collection<ComponentDataMetric> metrics) {
         this.metrics = metrics;
+        return this;
     }
 
     public Collection<ComponentProperty> getProperties() {
         return properties;
     }
 
-    public void setProperties(Collection<ComponentProperty> properties) {
+    public ComponentData setProperties(Collection<ComponentProperty> properties) {
         this.properties = properties;
+        return this;
     }
 }

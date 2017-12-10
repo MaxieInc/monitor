@@ -17,6 +17,14 @@ public class ComponentDataMetric implements Serializable {
     /** числовое значение */
     private Float value;
 
+    public ComponentDataMetric() {
+    }
+
+    public ComponentDataMetric(String mnemo, Float value) {
+        this.mnemo = mnemo;
+        this.value = value;
+    }
+
     public String getMnemo() {
         return mnemo;
     }

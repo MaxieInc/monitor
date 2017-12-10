@@ -21,9 +21,6 @@ public class MonitoringResult implements Serializable {
     /** Статус опроса компонента */
     private Integer httpStatus;
 
-    /** Длительность опроса */
-    private Long responseDuration;
-
     /** Последняя связь с компонентом */
     private Date lastOnline;
 
@@ -58,15 +55,6 @@ public class MonitoringResult implements Serializable {
 
     public MonitoringResult setHttpStatus(Integer httpStatus) {
         this.httpStatus = httpStatus;
-        return this;
-    }
-
-    public Long getResponseDuration() {
-        return responseDuration;
-    }
-
-    public MonitoringResult setResponseDuration(Long responseDuration) {
-        this.responseDuration = responseDuration;
         return this;
     }
 

@@ -7,6 +7,7 @@
       "url": "https://isales.trcont.com/account-back/auth/login",
       "keepAlive": 180000,
       "timeout": 1000,
+      "type": "QUERY",
       "responses": {
         "healthy": ["200", "204"],
         "warning": [],
@@ -32,6 +33,7 @@
       "url": "http://google.com",
       "keepAlive": 180000,
       "timeout": 1000,
+      "type": "QUERY",
       "responses": {
         "healthy": [],
         "warning": [],
@@ -57,6 +59,7 @@
       "url": "http://rambler.ru",
       "keepAlive": 180000,
       "timeout": 1000,
+      "type": "POST",
       "responses": {
         "healthy": [200],
         "warning": [],

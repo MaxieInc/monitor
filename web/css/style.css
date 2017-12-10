@@ -54,7 +54,7 @@
 }
 
 .NOT_CHECKED {
-    background-color: lightgray;
+    background-color: gray;
 }
 .HEALTHY {
     background-color: lightgreen;
@@ -70,6 +70,7 @@
     color: black;
 }
 .UNKNOWN {
-    background-color: darkgray;
+    background-color: brown;
+    color: #FFFFFF;
 }
 

@@ -1,1 +1,1 @@
-{"status":"WARNING","lastResponse":{"mnemo":"google","url":"http://google.com","httpStatus":200,"responseDuration":140,"lastOnline":1512841484001,"comment":null,"componentData":null}}
+{"status":"WARNING","reason":"Проверка по Http-статусу ответа","lastResponse":{"mnemo":"google","url":"http://google.com","httpStatus":200,"lastOnline":1512919666706,"comment":null,"componentData":{"metrics":[{"mnemo":"component.call.duration","value":736.0}],"properties":[]}}}

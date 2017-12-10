@@ -47,6 +47,7 @@ public class ListenerService {
         if (mnemo == null || data == null) throw new BadRequestException("Both mnemo and data must not be null");
 
         final MonitoringResult monitoringResult = new MonitoringResult()
+                .setMnemo(mnemo)
                 .setLastOnline(new Date())
                 .setComponentData(data);
         final ComponentConfig componentConfig = checkerContainer.getConfigByMnemo(mnemo);

@@ -2,11 +2,13 @@ package ru.dtnm.monitor.model;
 
 import ru.dtnm.monitor.model.config.component.ComponentConfig;
 import ru.dtnm.monitor.model.config.component.ComponentMetric;
-import ru.dtnm.monitor.model.config.component.ComponentProperty;
 import ru.dtnm.monitor.model.config.component.ComponentResponses;
+import ru.dtnm.monitor.model.config.component.PropMnemoConstant;
 import ru.dtnm.monitor.model.query.ComponentDataMetric;
 import ru.dtnm.monitor.model.query.MonitoringResult;
+import ru.dtnm.monitor.model.status.CheckMnemoConstant;
 import ru.dtnm.monitor.model.status.CheckStatus;
+import ru.dtnm.monitor.model.status.CheckStatusContainer;
 import ru.dtnm.monitor.model.status.CheckStatusResponse;
 
 import java.io.IOException;
@@ -32,24 +34,33 @@ public class CheckStatusFactory {
      */
     public static CheckStatusResponse status(final MonitoringResult monitoringResult, final ComponentConfig componentConfig) throws IOException {
         final CheckStatusResponse response = new CheckStatusResponse();
-        final List<CheckStatus> statuses = new ArrayList<>();
-        // 1. Проверка на соответствие HTTP - статуса ответа и конфига, и таймаут
-        statuses.add(checkResponseStrings(monitoringResult.getHttpStatus(), componentConfig.getResponses()));
-        // 2. Проверка по KeepAlive
-        final Date now = new Date();
-        statuses.add(now.getTime() - monitoringResult.getLastOnline().getTime() > componentConfig.getKeepAlive()
-                ? CheckStatus.FAILED
-                : CheckStatus.HEALTHY);
+        final List<CheckStatusContainer> statuses = new ArrayList<>();
 
-        if (monitoringResult.getComponentData() != null) {
-            // 3. Проверка по числовым метрикам
+        // 1. Проверка на соответствие HTTP - статуса ответа и конфига
+        statuses.add(checkStatusMasks(monitoringResult.getHttpStatus(), componentConfig.getResponses()));
+
+        // 2. Проверка на длительность ответа
+        statuses.add(checkCallDuration(monitoringResult.getComponentData().getMetrics(), componentConfig.getMetrics()));
+
+        // 3. Проверка по KeepAlive
+        final Date now = new Date();
+        final CheckStatus keepAliveStatus = now.getTime() - monitoringResult.getLastOnline().getTime() > componentConfig.getKeepAlive()
+                ? CheckStatus.FAILED
+                : CheckStatus.HEALTHY;
+        statuses.add(new CheckStatusContainer(keepAliveStatus, "KeepAlive check"));
+
+        // 4. Проверка по числовым метрикам
+        if (monitoringResult.getComponentData() != null && monitoringResult.getComponentData().getMetrics() != null) {
             statuses.addAll(checkMetrics(componentConfig.getMetrics(), monitoringResult.getComponentData().getMetrics()));
-            // 4. Проверка по строковым свойствам
-            statuses.addAll(checkProperties(componentConfig.getProperties(), monitoringResult.getComponentData().getProperties()));
         }
 
         response.setLastResponse(monitoringResult);
-        response.setStatus(statuses.stream().reduce(CheckStatus::getWorst).orElse(CheckStatus.UNKNOWN));
+        final CheckStatusContainer resultStatusContainer = statuses
+                .stream()
+                .reduce(CheckStatusContainer::getWorst)
+                .orElse(new CheckStatusContainer(CheckStatus.UNKNOWN, CheckMnemoConstant.UNKNOWN));
+        response.setStatus(resultStatusContainer.getStatus())
+                .setReason(resultStatusContainer.getReason());
         return response;
     }
 
@@ -59,14 +70,46 @@ public class CheckStatusFactory {
      * @param status тело ответа
      * @param componentResponses описание масок ответов для статусов
      */
-    private static CheckStatus checkResponseStrings(final Integer status, final ComponentResponses componentResponses) {
+    private static CheckStatusContainer checkStatusMasks(final Integer status, final ComponentResponses componentResponses) {
+        final CheckStatusContainer result = new CheckStatusContainer().setReason(CheckMnemoConstant.HTTP_STATUS_CHECK);
         if (status == null) { // статуса нет - не получили ответа за указанное время, обработка таймаута
-            return CheckStatus.valueOf(componentResponses.getTimeout());
-        } else if (matches(status, componentResponses.getHealthy())) return CheckStatus.HEALTHY;
-        else if (matches(status, componentResponses.getWarning())) return CheckStatus.WARNING;
-        else if (matches(status, componentResponses.getCritical())) return CheckStatus.CRITICAL;
-        else if (matches(status, componentResponses.getFailed())) return CheckStatus.FAILED;
-        else return CheckStatus.valueOf(componentResponses.getOthers());
+            result.setStatus(CheckStatus.valueOf(componentResponses.getTimeout()));
+        } else if (matches(status, componentResponses.getHealthy())) result.setStatus(CheckStatus.HEALTHY);
+        else if (matches(status, componentResponses.getWarning())) result.setStatus(CheckStatus.WARNING);
+        else if (matches(status, componentResponses.getCritical())) result.setStatus(CheckStatus.CRITICAL);
+        else if (matches(status, componentResponses.getFailed())) result.setStatus(CheckStatus.FAILED);
+        else result.setStatus(CheckStatus.valueOf(componentResponses.getOthers()));
+
+        return result;
+    }
+
+    /**
+     * Проверяет по длительности ответа (метрика с известным мнемо)
+     * @param realMetrics реальные метрики
+     * @param configMetrics конфигурационные метрики
+     */
+    private static CheckStatusContainer checkCallDuration(final Collection<ComponentDataMetric> realMetrics, final Collection<ComponentMetric> configMetrics) {
+        final CheckStatusContainer result = new CheckStatusContainer()
+                .setStatus(CheckStatus.UNKNOWN)
+                .setReason(CheckMnemoConstant.CALL_DURATION_CHECK);
+        final ComponentDataMetric realMetric = realMetrics
+                .stream()
+                .filter(e -> PropMnemoConstant.CALL_DURATION_MNEMO.equals(e.getMnemo()))
+                .findFirst()
+                .orElse(null);
+        final ComponentMetric configMetric = configMetrics
+                .stream()
+                .filter(m -> PropMnemoConstant.CALL_DURATION_MNEMO.equals(m.getMnemo()))
+                .findFirst()
+                .orElse(null);
+
+        if (realMetric == null || configMetric == null) result.setStatus(CheckStatus.UNKNOWN);
+        else if (realMetric.inInterval(configMetric.getHealthy())) result.setStatus(CheckStatus.HEALTHY);
+        else if (realMetric.inInterval(configMetric.getWarning())) result.setStatus(CheckStatus.WARNING);
+        else if (realMetric.inInterval(configMetric.getCritical())) result.setStatus(CheckStatus.CRITICAL);
+        else if (realMetric.inInterval(configMetric.getFailed())) result.setStatus(CheckStatus.FAILED);
+
+        return result;
     }
 
     /**
@@ -81,7 +124,7 @@ public class CheckStatusFactory {
         return patterns
                 .stream()
                 .map(e -> Pattern.compile(e).matcher(statusString).matches())
-                .filter(e -> true)
+                .filter(e -> e.equals(true))
                 .findFirst()
                 .orElse(false);
     }
@@ -92,7 +135,7 @@ public class CheckStatusFactory {
      * @param configMetrics метрики, которым должен соответствовать компонент
      * @param realMetrics реальные метрики компонента
      */
-    private static List<CheckStatus> checkMetrics(final Collection<ComponentMetric> configMetrics,  final Collection<ComponentDataMetric> realMetrics) {
+    private static List<CheckStatusContainer> checkMetrics(final Collection<ComponentMetric> configMetrics,  final Collection<ComponentDataMetric> realMetrics) {
         final List<CheckStatus> statuses = new ArrayList<>();
         final Map<String, ComponentMetric> configMetricsMap = configMetrics.stream().collect(Collectors.toMap(ComponentMetric::getMnemo, e -> e));
         if (realMetrics != null) {
@@ -106,33 +149,9 @@ public class CheckStatusFactory {
                 } else statuses.add(CheckStatus.UNKNOWN);
             }
         }
-        return statuses;
-    }
-
-    /**
-     * Сравнивает строковые свойства ответа и конфига
-     *
-     * @param configProperties конфигурация строковых свойств
-     * @param realProperties реальные строковые свойства из ответа компонента
-     */
-    private static List<CheckStatus> checkProperties(final Collection<ComponentProperty> configProperties, final Collection<ComponentProperty> realProperties) {
-        final List<CheckStatus> statuses = new ArrayList<>();
-        if (realProperties != null) {
-            final Map<String, ComponentProperty> realPropsMap = realProperties
-                    .stream()
-                    .collect(Collectors.toMap(ComponentProperty::getMnemo, e -> e));
-            for (ComponentProperty configProperty : configProperties) {
-                ComponentProperty realProperty = realPropsMap.remove(configProperty.getMnemo());
-                if (realProperty == null) {
-                    statuses.add(configProperty.isMandatory() ? CheckStatus.FAILED : CheckStatus.WARNING);
-                } else if (configProperty.getValue() != null) {
-                    statuses.add(configProperty.getValue().equals(realProperty.getValue()) ? CheckStatus.HEALTHY : CheckStatus.WARNING);
-                }
-            }
-            if (realPropsMap.keySet().size() > 0) {
-                statuses.add(CheckStatus.UNKNOWN);
-            }
-        }
-        return statuses;
+        return statuses
+                .stream()
+                .map(e -> new CheckStatusContainer(e, CheckMnemoConstant.METRICS_CHECK))
+                .collect(Collectors.toList());
     }
 }

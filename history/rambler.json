@@ -1,1 +1,1 @@
-{"status":"HEALTHY","lastResponse":{"mnemo":"rambler","url":"http://rambler.ru","httpStatus":200,"responseDuration":78,"lastOnline":1512841484095,"comment":null,"componentData":null}}
+{"status":"HEALTHY","reason":"Http status check","lastResponse":{"mnemo":"rambler","url":null,"httpStatus":null,"lastOnline":1512919378919,"comment":null,"componentData":{"metrics":[{"mnemo":"component.call.duration","value":12.5},{"mnemo":"some.metric.mnemo.n","value":14.0}],"properties":[{"mnemo":"url","value":"http://yandex.ru","mandatory":false,"special":null}]}}}

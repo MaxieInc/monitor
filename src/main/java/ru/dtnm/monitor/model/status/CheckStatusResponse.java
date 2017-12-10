@@ -12,6 +12,7 @@ import ru.dtnm.monitor.model.query.MonitoringResult;
 public class CheckStatusResponse {
 
     private CheckStatus status;
+    private String reason;
     private MonitoringResult lastResponse;
 
     public CheckStatus getStatus() {
@@ -20,6 +21,15 @@ public class CheckStatusResponse {
 
     public CheckStatusResponse setStatus(CheckStatus status) {
         this.status = status;
+        return this;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public CheckStatusResponse setReason(String reason) {
+        this.reason = reason;
         return this;
     }
 

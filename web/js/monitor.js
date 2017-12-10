@@ -79,11 +79,21 @@ function redrawMonitorPage(data) {
         $(element).attr('title', component.status);
 
         $('<p>Мнемо компонента: ' + lastResponse.mnemo + '</p>').appendTo(element);
-        $('<p title="' + lastResponse.url + '">Адрес: ' + lastResponse.url + '</p>').appendTo(element);
-        $('<p>HTTP - статус: ' + lastResponse.httpStatus + '</p>').appendTo(element);
-        $('<p>Длительность ответа: ' + lastResponse.responseDuration + 'мс</p>').appendTo(element);
+        var addressLine = lastResponse.url == null ? '' : lastResponse.url;
+        $('<p title="' + addressLine + '">Адрес: ' + lastResponse.url + '</p>').appendTo(element);
+        var lastResponseLine = lastResponse.httpStatus == null ? '' : lastResponse.httpStatus;
+        $('<p>HTTP - статус: ' + lastResponseLine + '</p>').appendTo(element);
+        var responseDuration = '';
+        for (var j = 0; j < lastResponse.componentData.metrics.length; j++) {
+            if (lastResponse.componentData.metrics[j].mnemo == 'component.call.duration') {
+                responseDuration = lastResponse.componentData.metrics[j].value + 'мс';
+                break;
+            }
+        }
+        $('<p>Длительность ответа: ' + responseDuration + '</p>').appendTo(element);
         var date = new Date(lastResponse.lastOnline);
         $('<p>Последний ответ: ' + date.toString('yyyy-MM-dd HH:mm:ss') + '</p>').appendTo(element);
+        $('<p>Ключевая проверка: ' + component.reason + '</p>').appendTo(element);
 
         element.appendTo('#monitoring_container');
     }

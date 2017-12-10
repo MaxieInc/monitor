@@ -15,6 +15,7 @@ public class ComponentConfig implements Serializable {
     private String url;
     private long keepAlive;
     private Integer timeout;
+    private ComponentQueryType type;
     private ComponentResponses responses;
     private Collection<ComponentMetric> metrics;
     private Collection<ComponentProperty> properties;
@@ -71,6 +72,15 @@ public class ComponentConfig implements Serializable {
 
     public void setTimeout(Integer timeout) {
         this.timeout = timeout;
+    }
+
+    /** Обязательное: тип получения данных о компоненте*/
+    public ComponentQueryType getType() {
+        return type;
+    }
+
+    public void setType(ComponentQueryType type) {
+        this.type = type;
     }
 
     /** [Обязательное] Соответствие HTTP-ответов и статуса компонента */

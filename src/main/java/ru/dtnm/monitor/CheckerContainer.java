@@ -15,6 +15,7 @@ import ru.dtnm.monitor.history.HistoryHandler;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
 import ru.dtnm.monitor.model.config.alert.AlertConfigContainer;
 import ru.dtnm.monitor.model.config.component.ComponentConfig;
+import ru.dtnm.monitor.model.config.component.ComponentQueryType;
 import ru.dtnm.monitor.model.config.component.MonitorConfig;
 
 import javax.annotation.PostConstruct;
@@ -143,7 +144,9 @@ public class CheckerContainer {
     private void pingAll() {
         if (!blocked) {
             for (Checker checker : CHECKERS.values()) {
-                checker.check(historyHandler);
+                if (ComponentQueryType.QUERY.equals(checker.getComponentConfig().getType())) {
+                    checker.check(historyHandler);
+                }
             }
         }
     }
