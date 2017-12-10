@@ -12,6 +12,7 @@ import ru.dtnm.monitor.model.config.alert.AlertAction;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
 import ru.dtnm.monitor.model.config.component.ComponentConfig;
 import ru.dtnm.monitor.model.query.MonitoringResult;
+import ru.dtnm.monitor.model.status.CheckStatus;
 import ru.dtnm.monitor.model.status.CheckStatusResponse;
 import ru.dtnm.monitor.notification.AlertHandler;
 
@@ -50,10 +51,10 @@ public class HistoryHandler {
      */
     public void handleQuery(final MonitoringResult queryResult, final ComponentConfig componentConfig, final AlertConfig alertConfig) {
         LOG.debug(">> handleQuery for mnemo={} and componentResponse={}", queryResult.getMnemo(), queryResult);
+        final CheckStatusResponse lastCheckResult = getLastCheckResult(queryResult.getMnemo());
         // Если не заполнено в чекере - значит, неудачный опрос и надо поднимать предыдущие результаты
         if (queryResult.getLastOnline() == null) {
-            final MonitoringResult lastResponse = getLastCheckResult(queryResult.getMnemo()).getLastResponse();
-            queryResult.setLastOnline(lastResponse.getLastOnline());
+            queryResult.setLastOnline(lastCheckResult.getLastResponse().getLastOnline());
         }
         try {
             final CheckStatusResponse stored = CheckStatusFactory.status(queryResult, componentConfig);
@@ -65,7 +66,11 @@ public class HistoryHandler {
                     .stream()
                     .filter(e -> e.getStatus().equals(stored.getStatus()))
                     .collect(Collectors.toList());
-            alertHandler.notify(queryResult.getMnemo(), actions);
+
+            // Если статус изменился - то отправляем уведомления
+            if (!stored.getStatus().equals(lastCheckResult.getStatus())) {
+                alertHandler.notify(queryResult.getMnemo(), actions);
+            }
         } catch (IOException ioe) {
             LOG.error("Unable to handle query result! {}", ioe.getMessage(), ioe);
         }
@@ -103,7 +108,7 @@ public class HistoryHandler {
      */
     public CheckStatusResponse getLastCheckResult(final String mnemo) {
         LOG.debug(">> getLastCheckResult for mnemo={}", mnemo);
-        CheckStatusResponse result = null;
+        CheckStatusResponse result = new CheckStatusResponse();
         final File file = new File(getPath(historyLocation, mnemo));
         try {
             final FileInputStream fis = new FileInputStream(file);
