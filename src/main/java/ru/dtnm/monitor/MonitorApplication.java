@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -26,7 +27,8 @@ import java.util.List;
 @ComponentScan(basePackages = {
         "ru.dtnm.monitor",
 		"ru.dtnm.monitor.rest.api",
-        "ru.dtnm.monitor.history"
+        "ru.dtnm.monitor.history",
+        "ru.dtnm.monitor.mail"
 })
 public class MonitorApplication {
 
