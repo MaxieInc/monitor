@@ -1,1 +1,1 @@
-{"status":"WARNING","reason":"Проверка по Http-статусу ответа","lastResponse":{"mnemo":"google","url":"http://google.com","httpStatus":200,"lastOnline":1512934106255,"comment":null,"componentData":{"metrics":[{"mnemo":"component.call.duration","value":109.0}],"properties":[]}}}
+{"status":"UNKNOWN","reason":"Проверка по метрикам","lastResponse":{"mnemo":"google","url":"http://google.com","httpStatus":200,"lastOnline":1513634467020,"comment":null,"componentData":{"metrics":[{"mnemo":"component.call.duration","value":5633.0}],"properties":[]}}}

@@ -73,27 +73,31 @@ function redrawMonitorPage(data) {
         var lastResponse = component.lastResponse;
         var element = $('<div></div>');
 
-        var elementId = lastResponse.mnemo;
-        $(element).attr('id', elementId);
-        $(element).attr('class', 'column ' + component.status);
-        $(element).attr('title', component.status);
+        if (lastResponse != null) {
+            var elementId = lastResponse.mnemo;
+            $(element).attr('id', elementId);
+            $(element).attr('class', 'column ' + component.status);
+            $(element).attr('title', component.status);
 
-        $('<p>Мнемо компонента: ' + lastResponse.mnemo + '</p>').appendTo(element);
-        var addressLine = lastResponse.url == null ? '' : lastResponse.url;
-        $('<p title="' + addressLine + '">Адрес: ' + lastResponse.url + '</p>').appendTo(element);
-        var lastResponseLine = lastResponse.httpStatus == null ? '' : lastResponse.httpStatus;
-        $('<p>HTTP - статус: ' + lastResponseLine + '</p>').appendTo(element);
-        var responseDuration = '';
-        for (var j = 0; j < lastResponse.componentData.metrics.length; j++) {
-            if (lastResponse.componentData.metrics[j].mnemo == 'component.call.duration') {
-                responseDuration = lastResponse.componentData.metrics[j].value + 'мс';
-                break;
+            $('<p>Мнемо компонента: ' + lastResponse.mnemo + '</p>').appendTo(element);
+            var addressLine = lastResponse.url == null ? '' : lastResponse.url;
+            $('<p title="' + addressLine + '">Адрес: ' + lastResponse.url + '</p>').appendTo(element);
+            var lastResponseLine = lastResponse.httpStatus == null ? '' : lastResponse.httpStatus;
+            $('<p>HTTP - статус: ' + lastResponseLine + '</p>').appendTo(element);
+            var responseDuration = '';
+            if (lastResponse.componentData != null) {
+                for (var j = 0; j < lastResponse.componentData.metrics.length; j++) {
+                    if (lastResponse.componentData.metrics[j].mnemo == 'component.call.duration') {
+                        responseDuration = lastResponse.componentData.metrics[j].value + 'мс';
+                        break;
+                    }
+                }
             }
+            $('<p>Длительность ответа: ' + responseDuration + '</p>').appendTo(element);
+            var date = new Date(lastResponse.lastOnline);
+            $('<p>Последний ответ: ' + date.toString('yyyy-MM-dd HH:mm:ss') + '</p>').appendTo(element);
+            $('<p title="' + component.reason + '">Ключевая проверка: ' + component.reason + '</p>').appendTo(element);
         }
-        $('<p>Длительность ответа: ' + responseDuration + '</p>').appendTo(element);
-        var date = new Date(lastResponse.lastOnline);
-        $('<p>Последний ответ: ' + date.toString('yyyy-MM-dd HH:mm:ss') + '</p>').appendTo(element);
-        $('<p>Ключевая проверка: ' + component.reason + '</p>').appendTo(element);
 
         element.appendTo('#monitoring_container');
     }

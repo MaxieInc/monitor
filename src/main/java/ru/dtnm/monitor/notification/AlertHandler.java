@@ -27,6 +27,6 @@ public class AlertHandler {
     public void notify(final String component, final List<AlertAction> actions) {
         LOG.debug(">> notify: component={}, status={}, actions={}", component, actions.get(0).getStatus(), actions);
         // todo реализация самого уведомления
-        actions.stream().forEach(e -> mailSend.sendMessage(component, e));
+        actions.forEach(e -> mailSend.sendMessage(component, e));
     }
 }

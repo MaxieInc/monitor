@@ -19,6 +19,7 @@ public enum CheckStatus {
 
     CheckStatus(String description, int number) {
         this.description = description;
+        this.number = number;
     }
 
     private String description;

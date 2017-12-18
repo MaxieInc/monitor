@@ -21,7 +21,7 @@ public class MonitoringResult implements Serializable {
     /** Статус опроса компонента */
     private Integer httpStatus;
 
-    /** Последняя связь с компонентом */
+    /** Последняя связь с компонентом (связь - статус HTTP ok) */
     private Date lastOnline;
 
     /** Комментарий */

@@ -12,7 +12,6 @@ import ru.dtnm.monitor.model.config.alert.AlertAction;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
 import ru.dtnm.monitor.model.config.component.ComponentConfig;
 import ru.dtnm.monitor.model.query.MonitoringResult;
-import ru.dtnm.monitor.model.status.CheckStatus;
 import ru.dtnm.monitor.model.status.CheckStatusResponse;
 import ru.dtnm.monitor.notification.AlertHandler;
 
@@ -54,7 +53,9 @@ public class HistoryHandler {
         final CheckStatusResponse lastCheckResult = getLastCheckResult(queryResult.getMnemo());
         // Если не заполнено в чекере - значит, неудачный опрос и надо поднимать предыдущие результаты
         if (queryResult.getLastOnline() == null) {
-            queryResult.setLastOnline(lastCheckResult.getLastResponse().getLastOnline());
+            queryResult.setLastOnline(lastCheckResult.getLastResponse() == null
+                    ? null
+                    : lastCheckResult.getLastResponse().getLastOnline());
         }
         try {
             final CheckStatusResponse stored = CheckStatusFactory.status(queryResult, componentConfig);
@@ -71,8 +72,8 @@ public class HistoryHandler {
             if (!stored.getStatus().equals(lastCheckResult.getStatus())) {
                 alertHandler.notify(queryResult.getMnemo(), actions);
             }
-        } catch (IOException ioe) {
-            LOG.error("Unable to handle query result! {}", ioe.getMessage(), ioe);
+        } catch (Exception e) {
+            LOG.error("Unable to handle query result! {}", e.getMessage(), e);
         }
     }
 
@@ -82,7 +83,7 @@ public class HistoryHandler {
      * @param stored записываемая сущность
      * @throws IOException
      */
-    private void writeHistory(final CheckStatusResponse stored) throws IOException {
+    private void writeHistory(final CheckStatusResponse stored) {
         try {
             final File historyDir = new File(historyLocation);
             if (!historyDir.exists()) historyDir.mkdir();
@@ -114,7 +115,7 @@ public class HistoryHandler {
             final FileInputStream fis = new FileInputStream(file);
             result = objectMapper.readValue(IOUtils.readStringFromStream(fis), CheckStatusResponse.class);
         } catch (Exception e) {
-            LOG.error("Unable to read history: ", e.getMessage(), e);
+            LOG.error("Unable to read history: {}", e.getMessage());
         }
         return result;
     }

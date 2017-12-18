@@ -1,6 +1,7 @@
 package ru.dtnm.monitor.checker;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -68,7 +69,9 @@ public class SimpleChecker extends Checker {
                 LOG.error("Unable to parse ComponentData!");
             }
             monitoringResult
-                    .setLastOnline(endDate)
+                    .setLastOnline(response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK
+                            ? endDate
+                            : monitoringResult.getLastOnline())
                     .setComponentData(componentData)
                     .setHttpStatus(response.getStatusLine().getStatusCode());
 
@@ -77,7 +80,7 @@ public class SimpleChecker extends Checker {
 
             historyHandler.handleQuery(monitoringResult, this.componentConfig, alertConfig);
         } catch (IOException ioe) {
-            LOG.error("Unable to perform check: {}", ioe.getMessage(), ioe);
+            LOG.error("Unable to perform check: {}", ioe.toString());
             historyHandler.handleQuery(monitoringResult.setComment(ioe.getMessage()), this.componentConfig, alertConfig);
         }
     }

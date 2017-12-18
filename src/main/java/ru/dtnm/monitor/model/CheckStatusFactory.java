@@ -4,6 +4,7 @@ import ru.dtnm.monitor.model.config.component.ComponentConfig;
 import ru.dtnm.monitor.model.config.component.ComponentMetric;
 import ru.dtnm.monitor.model.config.component.ComponentResponses;
 import ru.dtnm.monitor.model.config.component.PropMnemoConstant;
+import ru.dtnm.monitor.model.query.ComponentData;
 import ru.dtnm.monitor.model.query.ComponentDataMetric;
 import ru.dtnm.monitor.model.query.MonitoringResult;
 import ru.dtnm.monitor.model.status.CheckMnemoConstant;
@@ -32,7 +33,7 @@ public class CheckStatusFactory {
      * @param monitoringResult результат последнего опроса компонента
      * @param componentConfig конфигурация наблюдаемого компонента
      */
-    public static CheckStatusResponse status(final MonitoringResult monitoringResult, final ComponentConfig componentConfig) throws IOException {
+    public static CheckStatusResponse status(final MonitoringResult monitoringResult, final ComponentConfig componentConfig) {
         final CheckStatusResponse response = new CheckStatusResponse();
         final List<CheckStatusContainer> statuses = new ArrayList<>();
 
@@ -40,14 +41,17 @@ public class CheckStatusFactory {
         statuses.add(checkStatusMasks(monitoringResult.getHttpStatus(), componentConfig.getResponses()));
 
         // 2. Проверка на длительность ответа
-        statuses.add(checkCallDuration(monitoringResult.getComponentData().getMetrics(), componentConfig.getMetrics()));
+        statuses.add(checkCallDuration(monitoringResult.getComponentData(), componentConfig.getMetrics()));
 
         // 3. Проверка по KeepAlive
         final Date now = new Date();
-        final CheckStatus keepAliveStatus = now.getTime() - monitoringResult.getLastOnline().getTime() > componentConfig.getKeepAlive()
-                ? CheckStatus.FAILED
-                : CheckStatus.HEALTHY;
-        statuses.add(new CheckStatusContainer(keepAliveStatus, "KeepAlive check"));
+        CheckStatus keepAliveStatus = CheckStatus.UNKNOWN;
+        if (monitoringResult.getLastOnline() != null) {
+            keepAliveStatus = now.getTime() - monitoringResult.getLastOnline().getTime() > componentConfig.getKeepAlive()
+                    ? CheckStatus.FAILED
+                    : CheckStatus.HEALTHY;
+        }
+        statuses.add(new CheckStatusContainer(keepAliveStatus, CheckMnemoConstant.KEEP_ALIVE_CHECK));
 
         // 4. Проверка по числовым метрикам
         if (monitoringResult.getComponentData() != null && monitoringResult.getComponentData().getMetrics() != null) {
@@ -85,13 +89,15 @@ public class CheckStatusFactory {
 
     /**
      * Проверяет по длительности ответа (метрика с известным мнемо)
-     * @param realMetrics реальные метрики
+     * @param componentData реальные данные в ответе от компонента
      * @param configMetrics конфигурационные метрики
      */
-    private static CheckStatusContainer checkCallDuration(final Collection<ComponentDataMetric> realMetrics, final Collection<ComponentMetric> configMetrics) {
+    private static CheckStatusContainer checkCallDuration(final ComponentData componentData, final Collection<ComponentMetric> configMetrics) {
         final CheckStatusContainer result = new CheckStatusContainer()
-                .setStatus(CheckStatus.UNKNOWN)
+                .setStatus(CheckStatus.WARNING)
                 .setReason(CheckMnemoConstant.CALL_DURATION_CHECK);
+
+        final Collection<ComponentDataMetric> realMetrics = componentData.getMetrics();
         final ComponentDataMetric realMetric = realMetrics
                 .stream()
                 .filter(e -> PropMnemoConstant.CALL_DURATION_MNEMO.equals(e.getMnemo()))
@@ -103,7 +109,7 @@ public class CheckStatusFactory {
                 .findFirst()
                 .orElse(null);
 
-        if (realMetric == null || configMetric == null) result.setStatus(CheckStatus.UNKNOWN);
+        if (realMetric == null || configMetric == null) result.setStatus(CheckStatus.WARNING);
         else if (realMetric.inInterval(configMetric.getHealthy())) result.setStatus(CheckStatus.HEALTHY);
         else if (realMetric.inInterval(configMetric.getWarning())) result.setStatus(CheckStatus.WARNING);
         else if (realMetric.inInterval(configMetric.getCritical())) result.setStatus(CheckStatus.CRITICAL);
@@ -137,7 +143,9 @@ public class CheckStatusFactory {
      */
     private static List<CheckStatusContainer> checkMetrics(final Collection<ComponentMetric> configMetrics,  final Collection<ComponentDataMetric> realMetrics) {
         final List<CheckStatus> statuses = new ArrayList<>();
-        final Map<String, ComponentMetric> configMetricsMap = configMetrics.stream().collect(Collectors.toMap(ComponentMetric::getMnemo, e -> e));
+        final Map<String, ComponentMetric> configMetricsMap = configMetrics
+                .stream()
+                .collect(Collectors.toMap(ComponentMetric::getMnemo, e -> e));
         if (realMetrics != null) {
             for (ComponentDataMetric realMetric : realMetrics) {
                 final ComponentMetric configMetric = configMetricsMap.get(realMetric.getMnemo());
