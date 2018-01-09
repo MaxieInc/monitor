@@ -94,8 +94,8 @@ function redrawMonitorPage(data) {
                 }
             }
             $('<p>Длительность ответа: ' + responseDuration + '</p>').appendTo(element);
-            var date = new Date(lastResponse.lastOnline);
-            $('<p>Последний ответ: ' + date.toString('yyyy-MM-dd HH:mm:ss') + '</p>').appendTo(element);
+            var dateString = lastResponse.lastOnline == null ? 'нет' : new Date(lastResponse.lastOnline).toString('yyyy-MM-dd HH:mm:ss');
+            $('<p>Последний ответ: ' + dateString + '</p>').appendTo(element);
             $('<p title="' + component.reason + '">Ключевая проверка: ' + component.reason + '</p>').appendTo(element);
         }
 

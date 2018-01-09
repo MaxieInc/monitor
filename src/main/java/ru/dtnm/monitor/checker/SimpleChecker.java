@@ -2,7 +2,6 @@ package ru.dtnm.monitor.checker;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -45,7 +44,7 @@ public class SimpleChecker extends Checker {
     /**
      * Опрос интересующего компонента
      *
-     * @param historyHandler
+     * @param historyHandler обработчик результатов опроса компонента
      */
     public void check (final HistoryHandler historyHandler) throws Exception {
         final MonitoringResult result = new MonitoringResult()
@@ -54,7 +53,6 @@ public class SimpleChecker extends Checker {
                         .setMetrics(new ArrayList<>()))
                 .setMnemo(this.componentConfig.getMnemo())
                 .setUrl(this.componentConfig.getUrl());
-        final HttpClient httpClient = getClient();
         final Date startDate = new Date();
         Date endDate = null;
         try (CloseableHttpClient client = getClient()) {
