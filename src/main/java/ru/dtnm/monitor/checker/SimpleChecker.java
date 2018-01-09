@@ -5,8 +5,11 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,9 @@ import ru.dtnm.monitor.model.config.alert.AlertConfig;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -41,7 +47,7 @@ public class SimpleChecker extends Checker {
      *
      * @param historyHandler
      */
-    public void check (final HistoryHandler historyHandler) {
+    public void check (final HistoryHandler historyHandler) throws Exception {
         final MonitoringResult monitoringResult = new MonitoringResult()
                 .setMnemo(this.componentConfig.getMnemo())
                 .setUrl(this.componentConfig.getUrl());
@@ -85,23 +91,32 @@ public class SimpleChecker extends Checker {
         }
     }
 
-    public SimpleChecker(final ComponentConfig componentConfig, final AlertConfig alertConfig) {
-        super(componentConfig, alertConfig);
+    public SimpleChecker(final ComponentConfig componentConfig, final AlertConfig alertConfig, final boolean ignoreSSL) {
+        super(componentConfig, alertConfig, ignoreSSL);
     }
 
     /**
      * Конструирует Http-клиент
      */
-    private CloseableHttpClient getClient() {
+    private CloseableHttpClient getClient() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         if (componentConfig.getTimeout() != null) {
             final RequestConfig requestConfig = RequestConfig.custom()
                     .setSocketTimeout(componentConfig.getTimeout())
                     .setConnectTimeout(componentConfig.getTimeout())
                     .setConnectionRequestTimeout(componentConfig.getTimeout())
                     .build();
-            return HttpClients.custom()
-                .setDefaultRequestConfig(requestConfig)
-                .build();
+            if (ignoreSSL) {
+                final SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(
+                        new SSLContextBuilder().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build());
+                return HttpClients.custom()
+                        .setSSLSocketFactory(socketFactory)
+                        .setDefaultRequestConfig(requestConfig)
+                        .build();
+            } else {
+                return HttpClients.custom()
+                        .setDefaultRequestConfig(requestConfig)
+                        .build();
+            }
         } else return HttpClients.createDefault();
     }
 }

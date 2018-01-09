@@ -5,6 +5,6 @@ package ru.dtnm.monitor.model.config.component;
  */
 public interface PropMnemoConstant {
 
-    // Мнемоника длительности вызова (мс)
-    String CALL_DURATION_MNEMO = "component.call.duration";
+    /** Мнемоника длительности вызова (мс) */
+    String CALL_DURATION_MNEMO = "component.response.ms";
 }

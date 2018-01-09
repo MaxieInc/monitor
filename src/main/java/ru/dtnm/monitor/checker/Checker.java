@@ -18,6 +18,7 @@ public abstract class Checker {
 
     protected ComponentConfig componentConfig;
     protected AlertConfig alertConfig;
+    protected boolean ignoreSSL;
 
     /** Возвращает собственную конфигурацию компонента */
     public ComponentConfig getComponentConfig() {
@@ -37,10 +38,11 @@ public abstract class Checker {
         this.alertConfig = alertConfig;
     }
 
-    public abstract void check(HistoryHandler historyHandler);
+    public abstract void check(HistoryHandler historyHandler) throws Exception;
 
-    public Checker(ComponentConfig componentConfig, AlertConfig alertConfig) {
+    public Checker(ComponentConfig componentConfig, AlertConfig alertConfig, boolean ignoreSSL) {
         this.componentConfig = componentConfig;
         this.alertConfig = alertConfig;
+        this.ignoreSSL = ignoreSSL;
     }
 }

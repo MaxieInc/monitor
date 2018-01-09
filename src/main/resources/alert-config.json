@@ -1,5 +1,7 @@
 {
-  "alertConfigs": [
+  "persons": [],
+  "tepmlates": [],
+  "alerts": [
     {
       "component": "yandex",
       "actions": [

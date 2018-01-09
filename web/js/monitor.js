@@ -87,7 +87,7 @@ function redrawMonitorPage(data) {
             var responseDuration = '';
             if (lastResponse.componentData != null) {
                 for (var j = 0; j < lastResponse.componentData.metrics.length; j++) {
-                    if (lastResponse.componentData.metrics[j].mnemo == 'component.call.duration') {
+                    if (lastResponse.componentData.metrics[j].mnemo == 'component.response.ms') {
                         responseDuration = lastResponse.componentData.metrics[j].value + 'мс';
                         break;
                     }

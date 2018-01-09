@@ -62,14 +62,12 @@ public class HistoryHandler {
             // Запись данных
             writeHistory(stored);
             // Уведомление пользователей
-            final List<AlertAction> actions = alertConfig
-                    .getActions()
-                    .stream()
-                    .filter(e -> e.getStatus().equals(stored.getStatus()))
-                    .collect(Collectors.toList());
-
-            // Если статус изменился - то отправляем уведомления
-            if (!stored.getStatus().equals(lastCheckResult.getStatus())) {
+            if (!stored.getStatus().equals(lastCheckResult.getStatus()) && alertConfig != null) {
+                final List<AlertAction> actions = alertConfig
+                        .getActions()
+                        .stream()
+                        .filter(e -> e.getStatus().equals(stored.getStatus()))
+                        .collect(Collectors.toList());
                 alertHandler.notify(queryResult.getMnemo(), actions);
             }
         } catch (Exception e) {

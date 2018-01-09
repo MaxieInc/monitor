@@ -2,6 +2,7 @@ package ru.dtnm.monitor.model.config.alert;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author M.Belolipov
@@ -10,14 +11,36 @@ import java.util.List;
  */
 public class AlertConfigContainer implements Serializable {
 
-    private List<AlertConfig> alertConfigs;
+    /** Описание адресатов уведомлений */
+    private List<AlertPerson> persons;
 
+    /** Настройки рассылки уведомлений */
+    private List<AlertConfig> alerts;
 
-    public List<AlertConfig> getAlertConfigs() {
-        return alertConfigs;
+    /** Шаблоны уведомлений по мнемоникам */
+    private Map<String, String> templates;
+
+    public List<AlertPerson> getPersons() {
+        return persons;
     }
 
-    public void setAlertConfigs(List<AlertConfig> alertConfigs) {
-        this.alertConfigs = alertConfigs;
+    public void setPersons(List<AlertPerson> persons) {
+        this.persons = persons;
+    }
+
+    public List<AlertConfig> getAlerts() {
+        return alerts;
+    }
+
+    public void setAlerts(List<AlertConfig> alerts) {
+        this.alerts = alerts;
+    }
+
+    public Map<String, String> getTemplates() {
+        return templates;
+    }
+
+    public void setTemplates(Map<String, String> templates) {
+        this.templates = templates;
     }
 }

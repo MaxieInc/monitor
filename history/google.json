@@ -1,1 +1,0 @@
-{"status":"UNKNOWN","reason":"Проверка по метрикам","lastResponse":{"mnemo":"google","url":"http://google.com","httpStatus":200,"lastOnline":1513634467020,"comment":null,"componentData":{"metrics":[{"mnemo":"component.call.duration","value":5633.0}],"properties":[]}}}

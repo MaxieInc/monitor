@@ -1,10 +1,10 @@
 {
   "components": [
     {
-      "mnemo": "yandex",
-      "caption": "Яндекс главная",
-      "descr": "Мониторинг главной страницы яндекса - как просто первый пример",
-      "url": "https://isales.trcont.com/account-back/auth/login",
+      "mnemo": "ti-backend",
+      "caption": "Ввод и просмотр",
+      "descr": "Ввод и просмотр данных",
+      "url": "https://assioi.skts.ti-ees.ru/",
       "keepAlive": 180000,
       "timeout": 1000,
       "type": "QUERY",
@@ -17,20 +17,39 @@
         "timeout": "FAILED"
       },
       "metrics": [{
-        "mnemo": "metric.mnemo",
+        "mnemo": "component.response.ms",
         "mandatory": true,
         "healthy": [0, 100],
         "warning": [100, 250],
         "critical": [251, 1000],
         "failed": [1001, 180000]
       }],
-      "properties": []
+      "properties": [
+        {
+          "mnemo": "address",
+          "value": "https://assioi.skts.ti-ees.ru/",
+          "mandatory": false,
+          "special": "address"
+        },
+        {
+          "mnemo": "hostname",
+          "value": "assioi.skts.ti-ees.ru",
+          "mandatory": false,
+          "special": "hostname"
+        },
+        {
+          "mnemo": "version",
+          "value": "0.0.1",
+          "mandatory": false,
+          "special": "version"
+        }
+      ]
     },
     {
-      "mnemo": "google",
-      "caption": "Гугл",
-      "descr": "Мониторинг сайта Гугл - для массовости",
-      "url": "http://google.com",
+      "mnemo": "Portal-CI",
+      "caption": "Аналитическая отчётность",
+      "descr": "Сервис аналитической отчётности",
+      "url": "https://portal.skts.ti-ees.ru/Tables/analist.jsp",
       "keepAlive": 180000,
       "timeout": 1000,
       "type": "QUERY",
@@ -43,40 +62,33 @@
         "timeout": "WARNING"
       },
       "metrics": [{
-        "mnemo": "metric.mnemo",
+        "mnemo": "component.response.ms",
         "mandatory": true,
         "healthy": [0, 100],
         "warning": [100, 250],
         "critical": [251, 1000],
-        "failed": [1001, 180000]
+        "failed": [1001, 180000000]
       }],
-      "properties": []
-    },
-    {
-      "mnemo": "rambler",
-      "caption": "Рамблер, например",
-      "descr": "Мониторинг рамблера - просто так",
-      "url": "http://rambler.ru",
-      "keepAlive": 180000,
-      "timeout": 1000,
-      "type": "POST",
-      "responses": {
-        "healthy": [200],
-        "warning": [],
-        "critical": [],
-        "failed": [500],
-        "others": "UNKNOWN",
-        "timeout": "HEALTHY"
-      },
-      "metrics": [{
-        "mnemo": "metric.mnemo",
-        "mandatory": true,
-        "healthy": [0, 100],
-        "warning": [100, 250],
-        "critical": [251, 1000],
-        "failed": [1001, 180000]
-      }],
-      "properties": []
+      "properties": [
+        {
+          "mnemo": "address",
+          "value": "https://portal.skts.ti-ees.ru/Tables/analist.jsp",
+          "mandatory": false,
+          "special": "address"
+        },
+        {
+          "mnemo": "hostname",
+          "value": "portal.skts.ti-ees.ru",
+          "mandatory": false,
+          "special": "hostname"
+        },
+        {
+          "mnemo": "version",
+          "value": "0.0.1",
+          "mandatory": false,
+          "special": "version"
+        }
+      ]
     }
   ]
 }

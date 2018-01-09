@@ -54,6 +54,9 @@ public class CheckerContainer {
     @Value("${alert.config.location:null}")
     private String alertConfigLocation;
 
+    @Value("${ssl.restrictions.ignore:false}")
+    private boolean sslIgnoreSetting;
+
 
     /** Мап сущностей, опрашивающих удалённые компоненты*/
     private static final Map<String, Checker> CHECKERS = new HashMap<>();
@@ -104,7 +107,7 @@ public class CheckerContainer {
      */
     public AlertConfig getAlertConfigByMnemo(final String mnemo) throws IOException {
         return getConfig(alertConfigLocation, AlertConfigContainer.class)
-                .getAlertConfigs()
+                .getAlerts()
                 .stream()
                 .filter(e -> e.getComponent().equals(mnemo))
                 .findFirst()
@@ -127,13 +130,13 @@ public class CheckerContainer {
         try {
             // конфиг оповещений
             final Map<String, AlertConfig> alertConfigs = getConfig(alertConfigLocation, AlertConfigContainer.class)
-                    .getAlertConfigs()
+                    .getAlerts()
                     .stream()
                     .collect(Collectors.toMap(AlertConfig::getComponent, e -> e));
             // Конфиг опрашиваемых компонентов
             getConfig(monitorConfigLocation, MonitorConfig.class)
                     .getComponents()
-                    .forEach(e -> CHECKERS.put(e.getMnemo(), new SimpleChecker(e, alertConfigs.get(e.getMnemo()))));
+                    .forEach(e -> CHECKERS.put(e.getMnemo(), new SimpleChecker(e, alertConfigs.get(e.getMnemo()), sslIgnoreSetting)));
         } catch (IOException ioe) {
             LOG.error("Unable to read configJson: {}", ioe.getMessage());
         }
@@ -145,7 +148,11 @@ public class CheckerContainer {
         if (!blocked) {
             for (Checker checker : CHECKERS.values()) {
                 if (ComponentQueryType.QUERY.equals(checker.getComponentConfig().getType())) {
-                    checker.check(historyHandler);
+                    try {
+                        checker.check(historyHandler);
+                    } catch (Exception e) {
+                        LOG.error("Unable to query component {}", checker.getComponentConfig().getMnemo(), e.getMessage());
+                    }
                 }
             }
         }
