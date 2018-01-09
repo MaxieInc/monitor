@@ -19,10 +19,10 @@
       "metrics": [{
         "mnemo": "component.response.ms",
         "mandatory": true,
-        "healthy": [0, 100],
-        "warning": [100, 250],
-        "critical": [251, 1000],
-        "failed": [1001, 180000]
+        "healthy": ["0", "100.56"],
+        "warning": ["100.56", "250"],
+        "critical": ["251", "1000"],
+        "failed": ["1001", "MAX"]
       }],
       "properties": [
         {
@@ -64,10 +64,10 @@
       "metrics": [{
         "mnemo": "component.response.ms",
         "mandatory": true,
-        "healthy": [0, 100],
-        "warning": [100, 250],
-        "critical": [251, 1000],
-        "failed": [1001, 180000000]
+        "healthy": ["0", "100.56"],
+        "warning": ["100.56", "250"],
+        "critical": ["251", "1000"],
+        "failed": ["1001", "MAX"]
       }],
       "properties": [
         {

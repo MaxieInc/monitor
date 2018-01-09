@@ -1,7 +1,8 @@
 package ru.dtnm.monitor.model.config.component;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>Конфиг: Числовая метрика компонента для мониторинга</p>
@@ -39,8 +40,8 @@ public class ComponentMetric implements Serializable {
         return healthy;
     }
 
-    public void setHealthy(Float[] healthy) {
-        this.healthy = healthy;
+    public void setHealthy(String[] healthy) {
+        this.healthy = fillFloatArray(healthy);
     }
 
     /** [Обязательный] Интервал значений для состояния: "Желтый" */
@@ -48,8 +49,8 @@ public class ComponentMetric implements Serializable {
         return warning;
     }
 
-    public void setWarning(Float[] warning) {
-        this.warning = warning;
+    public void setWarning(String[] warning) {
+        this.warning = fillFloatArray(warning);
     }
 
     /** [Обязательный] Интервал значений для состояния: "Оранжевый" */
@@ -57,8 +58,8 @@ public class ComponentMetric implements Serializable {
         return critical;
     }
 
-    public void setCritical(Float[] critical) {
-        this.critical = critical;
+    public void setCritical(String[] critical) {
+        this.critical = fillFloatArray(critical);
     }
 
     /** [Обязательный] Интервал значений для состояния: "Красный" */
@@ -66,7 +67,25 @@ public class ComponentMetric implements Serializable {
         return failed;
     }
 
-    public void setFailed(Float[] failed) {
-        this.failed = failed;
+    public void setFailed(String[] failed) {
+        this.failed = fillFloatArray(failed);
+    }
+
+
+    /**
+     * Вспомогательный: Заполняет массив значений из массива строк
+     *
+     * @param values строки - значения
+     */
+    private static Float[] fillFloatArray(final String[] values) {
+        final List<String> valuesList = Arrays.asList(values);
+        final Float[] result = new Float[2];
+        valuesList.forEach(e -> {
+            int index = valuesList.indexOf(e);
+            if (e.equals("MAX")) {
+                result[index] = Float.MAX_VALUE;
+            } else result[index] = Float.parseFloat(e);
+        });
+        return result;
     }
 }
