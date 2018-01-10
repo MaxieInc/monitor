@@ -35,10 +35,10 @@ public class MailSendImpl implements MailSend {
     /**
      * ОТправка электронного письма
      *
-     * @param component
-     * @param action
-     * @param email
-     * @param templates
+     * @param component мнемо компонента
+     * @param action событие
+     * @param email почта
+     * @param templates шаблоны писем
      */
     @Override
     public void sendMessage(
