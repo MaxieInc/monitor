@@ -13,6 +13,8 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.dtnm.monitor.history.HistoryHandler;
+import ru.dtnm.monitor.model.config.alert.AlertConfigContainer;
+import ru.dtnm.monitor.model.config.alert.AlertPerson;
 import ru.dtnm.monitor.model.config.component.ComponentConfig;
 import ru.dtnm.monitor.model.config.component.PropMnemoConstant;
 import ru.dtnm.monitor.model.query.ComponentData;
@@ -27,6 +29,8 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -80,15 +84,20 @@ public class SimpleChecker extends Checker {
             // Положим известную нам числовую проперть - длительность вызова
             result.getComponentData().getMetrics().add(new ComponentDataMetric(PropMnemoConstant.CALL_DURATION_MNEMO, (float) (endDate.getTime() - startDate.getTime())));
 
-            historyHandler.handleQuery(result, this.componentConfig, alertConfig);
+            historyHandler.handleQuery(result, this.componentConfig, this.alertConfig, this.templates, this.persons);
         } catch (IOException ioe) {
             LOG.error("Unable to perform check: {}", ioe.toString());
-            historyHandler.handleQuery(result.setComment(ioe.getMessage()), this.componentConfig, alertConfig);
+            historyHandler.handleQuery(result.setComment(ioe.getMessage()), this.componentConfig, this.alertConfig, this.templates, this.persons);
         }
     }
 
-    public SimpleChecker(final ComponentConfig componentConfig, final AlertConfig alertConfig, final boolean ignoreSSL) {
-        super(componentConfig, alertConfig, ignoreSSL);
+    public SimpleChecker(
+            final ComponentConfig componentConfig,
+            final AlertConfig alertConfig,
+            final Map<String, String> templates,
+            final List<AlertPerson> persons,
+            final boolean ignoreSSL) {
+        super(componentConfig, alertConfig, templates, persons, ignoreSSL);
     }
 
     /**

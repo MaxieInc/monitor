@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.dtnm.monitor.CheckerContainer;
 import ru.dtnm.monitor.history.HistoryHandler;
-import ru.dtnm.monitor.model.config.alert.AlertConfig;
+import ru.dtnm.monitor.model.config.alert.AlertConfigContainer;
+import ru.dtnm.monitor.model.config.alert.AlertPerson;
 import ru.dtnm.monitor.model.config.component.ComponentConfig;
 import ru.dtnm.monitor.model.query.ComponentData;
 import ru.dtnm.monitor.model.query.MonitoringResult;
@@ -15,6 +16,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * Сервис: принимает сообщения от компонентов об их состоянии
@@ -51,8 +53,13 @@ public class ListenerService {
                 .setLastOnline(new Date())
                 .setComponentData(data);
         final ComponentConfig componentConfig = checkerContainer.getConfigByMnemo(mnemo);
-        final AlertConfig alertConfig = checkerContainer.getAlertConfigByMnemo(mnemo);
+        final AlertConfigContainer alertConfig = checkerContainer.getAlertConfigByMnemo(mnemo);
 
-        historyHandler.handleQuery(monitoringResult, componentConfig, alertConfig);
+        historyHandler.handleQuery(
+                monitoringResult,
+                componentConfig,
+                alertConfig.getAlerts().get(0),
+                alertConfig.getTemplates(),
+                alertConfig.getPersons().stream().collect(Collectors.toMap(AlertPerson::getLogin, e -> e)));
     }
 }

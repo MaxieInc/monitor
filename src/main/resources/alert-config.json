@@ -1,86 +1,66 @@
 {
-  "persons": [],
-  "tepmlates": [],
+  "persons": [{
+    "login": "maxie",
+    "name": "Белолипов Максим Игоревич",
+    "email": "maxie@bk.ru",
+    "sms": 9265757615
+  }],
+  "templates": {
+    "COMPONENT_STATUS_CHANGED_SUBJECT": "Изменение статуса компонента",
+    "COMPONENT_STATUS_CHANGED_BODY": "Внимание! Статус компонента {0} изменился на {1}"
+  },
   "alerts": [
     {
-      "component": "yandex",
+      "component": "ti-backend",
       "actions": [
         {
           "status": "HEALTHY",
-          "login": "maxie@bk.ru",
+          "login": "maxie",
           "email": false,
           "sms": false
         },
         {
           "status": "WARNING",
-          "login": "maxie@bk.ru",
+          "login": "maxie",
           "email": true,
           "sms": false
         },{
           "status": "CRITICAL",
-          "login": "maxie@bk.ru",
+          "login": "maxie",
           "email": false,
           "sms": true
         },
         {
           "status": "FAILED",
-          "login": "maxie@bk.ru",
+          "login": "maxie",
           "email": true,
           "sms": false
         }
       ]
     },
     {
-      "component": "google",
+      "component": "Portal-CI",
       "actions": [
         {
           "status": "HEALTHY",
-          "login": "maxie@bk.ru",
+          "login": "maxie",
           "email": false,
           "sms": false
         },
         {
           "status": "WARNING",
-          "login": "maxie@bk.ru",
+          "login": "maxie",
           "email": true,
           "sms": false
         },{
           "status": "CRITICAL",
-          "login": "maxie@bk.ru",
+          "login": "maxie",
           "email": false,
           "sms": true
         },
         {
           "status": "FAILED",
-          "login": "maxie@bk.ru",
-          "email": true,
-          "sms": false
-        }
-      ]
-    },
-    {
-      "component": "rambler",
-      "actions": [
-        {
-          "status": "HEALTHY",
-          "login": "maxie@bk.ru",
-          "email": false,
-          "sms": false
-        },
-        {
-          "status": "WARNING",
-          "login": "maxie@bk.ru",
-          "email": true,
-          "sms": false
-        },{
-          "status": "CRITICAL",
-          "login": "maxie@bk.ru",
-          "email": false,
-          "sms": true
-        },
-        {
-          "status": "FAILED",
-          "login": "maxie@bk.ru",
+          "login": "maxie",
           "email": true,
           "sms": false
         }

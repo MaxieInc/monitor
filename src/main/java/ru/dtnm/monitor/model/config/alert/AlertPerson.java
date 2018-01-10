@@ -11,7 +11,7 @@ public class AlertPerson implements Serializable {
     private String login;
     private String name;
     private String email;
-    private int sms;
+    private long sms;
 
     /** [Обязательные] Уникальный строковый логин уведомляемого */
     public String getLogin() {
@@ -41,11 +41,11 @@ public class AlertPerson implements Serializable {
     }
 
     /** [Обязательный] Числовой номер телефона (10 цифр) для оповещения по SMS */
-    public int getSms() {
+    public long getSms() {
         return sms;
     }
 
-    public void setSms(int sms) {
+    public void setSms(long sms) {
         this.sms = sms;
     }
 }

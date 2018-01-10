@@ -1,1 +1,1 @@
-{"status":"UNKNOWN","reason":"Проверка по KeepAlive","lastResponse":{"mnemo":"Portal-CI","url":"https://portal.skts.ti-ees.ru/Tables/analist.jsp","httpStatus":null,"lastOnline":null,"comment":"portal.skts.ti-ees.ru","componentData":{"metrics":[],"properties":[]}}}
+{"status":"WARNING","reason":"Проверка по Http-статусу ответа","lastResponse":{"mnemo":"Portal-CI","url":"https://portal.skts.ti-ees.ru/Tables/analist.jsp","httpStatus":200,"lastOnline":1515615525776,"comment":null,"componentData":{"metrics":[{"mnemo":"component.response.ms","value":115.0}],"properties":[]}}}

@@ -105,13 +105,13 @@ public class CheckerContainer {
      *
      * @param mnemo мнемо компонента
      */
-    public AlertConfig getAlertConfigByMnemo(final String mnemo) throws IOException {
-        return getConfig(alertConfigLocation, AlertConfigContainer.class)
-                .getAlerts()
+    public AlertConfigContainer getAlertConfigByMnemo(final String mnemo) throws IOException {
+        final AlertConfigContainer result = getConfig(alertConfigLocation, AlertConfigContainer.class);
+        result.setAlerts(result.getAlerts()
                 .stream()
                 .filter(e -> e.getComponent().equals(mnemo))
-                .findFirst()
-                .get();
+                .collect(Collectors.toList()));
+        return result;
     }
 
     /**
@@ -129,14 +129,17 @@ public class CheckerContainer {
         CHECKERS.clear();
         try {
             // конфиг оповещений
-            final Map<String, AlertConfig> alertConfigs = getConfig(alertConfigLocation, AlertConfigContainer.class)
+            final AlertConfigContainer container = getConfig(alertConfigLocation, AlertConfigContainer.class);
+            final Map<String, AlertConfig> alertConfigs = container
                     .getAlerts()
                     .stream()
                     .collect(Collectors.toMap(AlertConfig::getComponent, e -> e));
             // Конфиг опрашиваемых компонентов
             getConfig(monitorConfigLocation, MonitorConfig.class)
                     .getComponents()
-                    .forEach(e -> CHECKERS.put(e.getMnemo(), new SimpleChecker(e, alertConfigs.get(e.getMnemo()), sslIgnoreSetting)));
+                    .forEach(e -> CHECKERS.put(
+                            e.getMnemo(),
+                            new SimpleChecker(e, alertConfigs.get(e.getMnemo()), container.getTemplates(), container.getPersons(), sslIgnoreSetting)));
         } catch (IOException ioe) {
             LOG.error("Unable to read configJson: {}", ioe.getMessage());
         }

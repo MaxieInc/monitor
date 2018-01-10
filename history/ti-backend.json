@@ -1,1 +1,1 @@
-{"status":"UNKNOWN","reason":"Проверка по KeepAlive","lastResponse":{"mnemo":"ti-backend","url":"https://assioi.skts.ti-ees.ru/","httpStatus":null,"lastOnline":null,"comment":"assioi.skts.ti-ees.ru","componentData":{"metrics":[],"properties":[]}}}
+{"status":"HEALTHY","reason":"Проверка по Http-статусу ответа","lastResponse":{"mnemo":"ti-backend","url":"https://assioi.skts.ti-ees.ru/","httpStatus":200,"lastOnline":1515615525868,"comment":null,"componentData":{"metrics":[{"mnemo":"component.response.ms","value":53.0}],"properties":[]}}}

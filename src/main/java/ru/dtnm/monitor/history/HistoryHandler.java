@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import ru.dtnm.monitor.model.CheckStatusFactory;
 import ru.dtnm.monitor.model.config.alert.AlertAction;
 import ru.dtnm.monitor.model.config.alert.AlertConfig;
+import ru.dtnm.monitor.model.config.alert.AlertPerson;
 import ru.dtnm.monitor.model.config.component.ComponentConfig;
 import ru.dtnm.monitor.model.query.MonitoringResult;
 import ru.dtnm.monitor.model.status.CheckStatusResponse;
@@ -18,6 +19,7 @@ import ru.dtnm.monitor.notification.AlertHandler;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -48,7 +50,12 @@ public class HistoryHandler {
      * @param componentConfig информация о компоненте
      * @param alertConfig информация об уведомлениях
      */
-    public void handleQuery(final MonitoringResult queryResult, final ComponentConfig componentConfig, final AlertConfig alertConfig) {
+    public void handleQuery(
+            final MonitoringResult queryResult,
+            final ComponentConfig componentConfig,
+            final AlertConfig alertConfig,
+            final Map<String, String> templates,
+            final Map<String, AlertPerson> persons) {
         LOG.debug(">> handleQuery for mnemo={} and componentResponse={}", queryResult.getMnemo(), queryResult);
         final CheckStatusResponse lastCheckResult = getLastCheckResult(queryResult.getMnemo());
         // Если не заполнено в чекере - значит, неудачный опрос и надо поднимать предыдущие результаты
@@ -68,7 +75,7 @@ public class HistoryHandler {
                         .stream()
                         .filter(e -> e.getStatus().equals(stored.getStatus()))
                         .collect(Collectors.toList());
-                alertHandler.notify(queryResult.getMnemo(), actions);
+                alertHandler.notify(queryResult.getMnemo(), actions, templates, persons);
             }
         } catch (Exception e) {
             LOG.error("Unable to handle query result! {}", e.getMessage(), e);
