@@ -3,6 +3,7 @@ package ru.dtnm.monitor.model.config.alert;
 import ru.dtnm.monitor.model.status.CheckStatus;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>Конфиг: Способ уведомления ответственных по компонентам </p>
@@ -11,9 +12,8 @@ import java.io.Serializable;
 public class AlertAction implements Serializable {
 
     private CheckStatus status;
-    private String login;
-    private boolean email;
-    private boolean sms;
+    private List<AlertRecipient> recipients;
+
 
     /** [Обязательный] Строковый статус компонента (HEALTHY, WARNING, CRITICAL, FAILED) */
     public CheckStatus getStatus() {
@@ -24,30 +24,12 @@ public class AlertAction implements Serializable {
         this.status = status;
     }
 
-    /** [Обязательный] Строковый логин уведомляемого ответственного лица */
-    public String getLogin() {
-        return login;
+    /** [Необязательный] список адресатов уведомлений**/
+    public List<AlertRecipient> getRecipients() {
+        return recipients;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    /** [Обязательный] Признак необходимости увебомления по E-mail */
-    public boolean isEmail() {
-        return email;
-    }
-
-    public void setEmail(boolean email) {
-        this.email = email;
-    }
-
-    /** [Обязательный] Признак необходимости увебомления по SMS */
-    public boolean isSms() {
-        return sms;
-    }
-
-    public void setSms(boolean sms) {
-        this.sms = sms;
+    public void setRecipients(List<AlertRecipient> recipients) {
+        this.recipients = recipients;
     }
 }

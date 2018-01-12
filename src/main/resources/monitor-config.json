@@ -4,7 +4,7 @@
       "mnemo": "ti-backend",
       "caption": "Ввод и просмотр",
       "descr": "Ввод и просмотр данных",
-      "url": "https://assioi.skts.ti-ees.ru/",
+      "url": "http://172.17.42.21:9000/monitor",
       "keepAlive": 180000,
       "timeout": 1000,
       "type": "QUERY",
@@ -19,10 +19,10 @@
       "metrics": [{
         "mnemo": "component.response.ms",
         "mandatory": true,
-        "healthy": ["0", "100.56"],
-        "warning": ["100.56", "250"],
-        "critical": ["251", "1000"],
-        "failed": ["1001", "MAX"]
+        "healthy": ["0", "20"],
+        "warning": ["20", "40"],
+        "critical": ["40", "100"],
+        "failed": ["100", "MAX"]
       }],
       "properties": [
         {

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import ru.dtnm.monitor.mail.MailSend;
 import ru.dtnm.monitor.model.config.alert.AlertAction;
 import ru.dtnm.monitor.model.config.alert.AlertPerson;
+import ru.dtnm.monitor.model.config.alert.AlertRecipient;
 
 /**
  * Компонент для отправки уведомлений об изменении статуса компонента
@@ -32,6 +33,12 @@ public class AlertHandler {
             final Map<String, String> templates, final Map<String, AlertPerson> persons) {
         LOG.debug(">> notify: component={}, status={}, actions={}", component, actions.get(0).getStatus(), actions);
 
-        actions.forEach(e -> mailSend.sendMessage(component, e, persons.get(e.getLogin()).getEmail(), templates));
+        for (AlertAction action : actions) {
+            for (AlertRecipient recepient : action.getRecipients()) {
+                if (recepient.isEmail()) {
+//                    mailSend.sendMessage(component, action, persons.get(recepient.getLogin()).getEmail(), templates);
+                }
+            }
+        }
     }
 }

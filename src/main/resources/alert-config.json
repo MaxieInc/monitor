@@ -1,10 +1,18 @@
 {
-  "persons": [{
-    "login": "maxie",
-    "name": "Белолипов Максим Игоревич",
-    "email": "maxie@bk.ru",
-    "sms": 9265757615
-  }],
+  "persons": [
+    {
+      "login": "maxie",
+      "name": "Белолипов Максим Игоревич",
+      "email": "maxie@bk.ru",
+      "sms": 9265757615
+    },
+    {
+      "login": "vladimir",
+      "name": "Яковлев Владимир Леонидович",
+      "email": "yakovlev-vl@it-energy.ru",
+      "sms": 9265757615
+    }
+  ],
   "templates": {
     "COMPONENT_STATUS_CHANGED_SUBJECT": "Изменение статуса компонента",
     "COMPONENT_STATUS_CHANGED_BODY": "Внимание! Статус компонента {0} изменился на {1}"
@@ -15,26 +23,65 @@
       "actions": [
         {
           "status": "HEALTHY",
-          "login": "maxie",
-          "email": false,
-          "sms": false
+          "delay": 30,
+          "interval": 60,
+          "recipients": [
+            {
+              "login": "vladimir",
+              "email": true,
+              "sms": false
+            },
+            {
+              "login": "maxie",
+              "email": true,
+              "sms": false
+            }
+          ]
         },
         {
           "status": "WARNING",
-          "login": "maxie",
-          "email": true,
-          "sms": false
-        },{
+          "recipients": [
+            {
+              "login": "vladimir",
+              "email": true,
+              "sms": false
+            },
+            {
+              "login": "maxie",
+              "email": true,
+              "sms": false
+            }
+          ]
+        },
+        {
           "status": "CRITICAL",
-          "login": "maxie",
-          "email": false,
-          "sms": true
+          "recipients": [
+            {
+              "login": "vladimir",
+              "email": true,
+              "sms": false
+            },
+            {
+              "login": "maxie",
+              "email": true,
+              "sms": false
+            }
+          ]
         },
         {
           "status": "FAILED",
-          "login": "maxie",
-          "email": true,
-          "sms": false
+          "recipients": [
+            {
+              "login": "vladimir",
+              "email": true,
+              "sms": false
+            },
+            {
+              "login": "maxie",
+              "email": true,
+              "sms": false
+            }
+          ]
         }
       ]
     },
@@ -43,26 +90,63 @@
       "actions": [
         {
           "status": "HEALTHY",
-          "login": "maxie",
-          "email": false,
-          "sms": false
+          "recipients": [
+            {
+              "login": "vladimir",
+              "email": true,
+              "sms": false
+            },
+            {
+              "login": "maxie",
+              "email": true,
+              "sms": false
+            }
+          ]
         },
         {
           "status": "WARNING",
-          "login": "maxie",
-          "email": true,
-          "sms": false
-        },{
+          "recipients": [
+            {
+              "login": "vladimir",
+              "email": true,
+              "sms": false
+            },
+            {
+              "login": "maxie",
+              "email": true,
+              "sms": false
+            }
+          ]
+        },
+        {
           "status": "CRITICAL",
-          "login": "maxie",
-          "email": false,
-          "sms": true
+          "recipients": [
+            {
+              "login": "vladimir",
+              "email": true,
+              "sms": false
+            },
+            {
+              "login": "maxie",
+              "email": true,
+              "sms": false
+            }
+          ]
         },
         {
           "status": "FAILED",
-          "login": "maxie",
-          "email": true,
-          "sms": false
+          "recipients": [
+            {
+              "login": "vladimir",
+              "email": true,
+              "sms": false
+            },
+            {
+              "login": "maxie",
+              "email": true,
+              "sms": false
+            }
+          ]
         }
       ]
     }

@@ -48,6 +48,6 @@ public class ComponentDataMetric implements Serializable {
      */
     public boolean inInterval(final Float[] interval) {
         if (interval == null || interval[0] == null || interval[1] == null) return false;
-        else return (interval[0] <= value && value <= interval[1]);
+        else return (interval[0] <= value && value < interval[1]);
     }
 }
