@@ -1,92 +1,66 @@
 {
   "components": [
     {
-      "mnemo": "ti-backend",
-      "caption": "Ввод и просмотр",
-      "descr": "Ввод и просмотр данных",
-      "url": "http://172.17.42.21:9000/monitor",
-      "keepAlive": 180000,
-      "timeout": 1000,
+      "mnemo": "bo",
+      "caption": "BoChecker",
+      "descr": "Check BO",
+      "url": "https://portal.skts.ti-ees.ru/bocore/monitorservlet",
+      "keepAlive": 80000,
+      "timeout": 60000,
       "type": "QUERY",
       "responses": {
-        "healthy": ["200", "204"],
+        "healthy": [
+          "200",
+          "204"
+        ],
         "warning": [],
         "critical": [],
-        "failed": ["40.+"],
+        "failed": [
+          "40.+"
+        ],
         "others": "CRITICAL",
         "timeout": "FAILED"
       },
-      "metrics": [{
-        "mnemo": "component.response.ms",
-        "mandatory": true,
-        "healthy": ["0", "20"],
-        "warning": ["20", "40"],
-        "critical": ["40", "100"],
-        "failed": ["100", "MAX"]
-      }],
-      "properties": [
+      "metrics": [
         {
-          "mnemo": "address",
-          "value": "https://assioi.skts.ti-ees.ru/",
-          "mandatory": false,
-          "special": "address"
+          "mnemo": "error",
+          "mandatory": true,
+          "healthy": [
+            "0",
+            "0.1"
+          ],
+          "failed": [
+            "1",
+            "MAX"
+          ]
         },
         {
-          "mnemo": "hostname",
-          "value": "assioi.skts.ti-ees.ru",
-          "mandatory": false,
-          "special": "hostname"
-        },
-        {
-          "mnemo": "version",
-          "value": "0.0.1",
-          "mandatory": false,
-          "special": "version"
+          "mnemo": "duration",
+          "mandatory": true,
+          "healthy": [
+            "0",
+            "10"
+          ],
+          "warning": [
+            "11",
+            "30"
+          ],
+          "critical": [
+            "31",
+            "50"
+          ],
+          "failed": [
+            "51",
+            "MAX"
+          ]
         }
-      ]
-    },
-    {
-      "mnemo": "Portal-CI",
-      "caption": "Аналитическая отчётность",
-      "descr": "Сервис аналитической отчётности",
-      "url": "https://portal.skts.ti-ees.ru/Tables/analist.jsp",
-      "keepAlive": 180000,
-      "timeout": 1000,
-      "type": "QUERY",
-      "responses": {
-        "healthy": [],
-        "warning": [],
-        "critical": [],
-        "failed": [],
-        "others": "WARNING",
-        "timeout": "WARNING"
-      },
-      "metrics": [{
-        "mnemo": "component.response.ms",
-        "mandatory": true,
-        "healthy": ["0", "100.56"],
-        "warning": ["100.56", "250"],
-        "critical": ["251", "1000"],
-        "failed": ["1001", "MAX"]
-      }],
+      ],
       "properties": [
         {
           "mnemo": "address",
-          "value": "https://portal.skts.ti-ees.ru/Tables/analist.jsp",
+          "value": "https://portal.skts.ti-ees.ru/bocore/monitorservlet",
           "mandatory": false,
           "special": "address"
-        },
-        {
-          "mnemo": "hostname",
-          "value": "portal.skts.ti-ees.ru",
-          "mandatory": false,
-          "special": "hostname"
-        },
-        {
-          "mnemo": "version",
-          "value": "0.0.1",
-          "mandatory": false,
-          "special": "version"
         }
       ]
     }

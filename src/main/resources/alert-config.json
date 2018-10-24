@@ -1,16 +1,16 @@
 {
   "persons": [
     {
-      "login": "maxie",
-      "name": "Белолипов Максим Игоревич",
-      "email": "maxie@bk.ru",
-      "sms": 9265757615
+      "login": "bogachev-da",
+      "name": "Богачев Дмитрий Александрович",
+      "email": "bogachev-da@it-energy.ru",
+      "sms": 9637765978
     },
     {
       "login": "vladimir",
       "name": "Яковлев Владимир Леонидович",
       "email": "yakovlev-vl@it-energy.ru",
-      "sms": 9265757615
+      "sms": 9166773287
     }
   ],
   "templates": {
@@ -19,12 +19,10 @@
   },
   "alerts": [
     {
-      "component": "ti-backend",
+      "component": "bo",
       "actions": [
         {
           "status": "HEALTHY",
-          "delay": 30,
-          "interval": 60,
           "recipients": [
             {
               "login": "vladimir",
@@ -32,9 +30,9 @@
               "sms": false
             },
             {
-              "login": "maxie",
+              "login": "bogachev-da",
               "email": true,
-              "sms": false
+              "sms": true
             }
           ]
         },
@@ -47,9 +45,9 @@
               "sms": false
             },
             {
-              "login": "maxie",
+              "login": "bogachev-da",
               "email": true,
-              "sms": false
+              "sms": true
             }
           ]
         },
@@ -62,9 +60,9 @@
               "sms": false
             },
             {
-              "login": "maxie",
+              "login": "bogachev-da",
               "email": true,
-              "sms": false
+              "sms": true
             }
           ]
         },
@@ -77,74 +75,9 @@
               "sms": false
             },
             {
-              "login": "maxie",
+              "login": "bogachev-da",
               "email": true,
-              "sms": false
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "component": "Portal-CI",
-      "actions": [
-        {
-          "status": "HEALTHY",
-          "recipients": [
-            {
-              "login": "vladimir",
-              "email": true,
-              "sms": false
-            },
-            {
-              "login": "maxie",
-              "email": true,
-              "sms": false
-            }
-          ]
-        },
-        {
-          "status": "WARNING",
-          "recipients": [
-            {
-              "login": "vladimir",
-              "email": true,
-              "sms": false
-            },
-            {
-              "login": "maxie",
-              "email": true,
-              "sms": false
-            }
-          ]
-        },
-        {
-          "status": "CRITICAL",
-          "recipients": [
-            {
-              "login": "vladimir",
-              "email": true,
-              "sms": false
-            },
-            {
-              "login": "maxie",
-              "email": true,
-              "sms": false
-            }
-          ]
-        },
-        {
-          "status": "FAILED",
-          "recipients": [
-            {
-              "login": "vladimir",
-              "email": true,
-              "sms": false
-            },
-            {
-              "login": "maxie",
-              "email": true,
-              "sms": false
+              "sms": true
             }
           ]
         }

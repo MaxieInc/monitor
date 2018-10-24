@@ -1,1 +1,1 @@
-{"status":"HEALTHY","reason":"Проверка по Http-статусу ответа","lastResponse":{"mnemo":"ti-backend","url":"http://172.17.42.21:9000/monitor","httpStatus":200,"lastOnline":1515779676110,"comment":null,"componentData":{"metrics":[{"mnemo":"component.response.ms","value":15.0}],"properties":[]}}}
+{"status":"CRITICAL","reason":"Проверка по метрикам","lastResponse":{"mnemo":"ti-backend","url":"http://172.17.42.21:9000/monitor","httpStatus":200,"lastOnline":1539685949800,"comment":null,"componentData":{"metrics":[{"mnemo":"component.response.ms","value":47.0}],"properties":[]}}}

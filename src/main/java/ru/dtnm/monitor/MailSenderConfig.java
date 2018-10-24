@@ -45,7 +45,7 @@ public class MailSenderConfig {
         javaMailSender.setPassword(password);
 
         javaMailSender.setJavaMailProperties(getMailProperties());
-//        javaMailSender.getSession().setPasswordAuthentication(new URLName(smtpHost), new PasswordAuthentication(userName, password));
+        javaMailSender.getSession().setPasswordAuthentication(new URLName(smtpHost), new PasswordAuthentication(userName, password));
 
         return javaMailSender;
     }

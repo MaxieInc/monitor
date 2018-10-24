@@ -36,7 +36,7 @@ public class AlertHandler {
         for (AlertAction action : actions) {
             for (AlertRecipient recepient : action.getRecipients()) {
                 if (recepient.isEmail()) {
-//                    mailSend.sendMessage(component, action, persons.get(recepient.getLogin()).getEmail(), templates);
+                    mailSend.sendMessage(component, action, persons.get(recepient.getLogin()).getEmail(), templates);
                 }
             }
         }
