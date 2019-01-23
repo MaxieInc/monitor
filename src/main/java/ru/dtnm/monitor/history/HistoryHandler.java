@@ -65,17 +65,17 @@ public class HistoryHandler {
                     : lastCheckResult.getLastResponse().getLastOnline());
         }
         try {
-            final CheckStatusResponse stored = CheckStatusFactory.status(queryResult, componentConfig);
+            final CheckStatusResponse toStore = CheckStatusFactory.status(queryResult, componentConfig);
             // Запись данных
-            writeHistory(stored);
+            writeHistory(toStore);
             // Уведомление пользователей
-            if (!stored.getStatus().equals(lastCheckResult.getStatus()) && alertConfig != null) {
+            if (!toStore.getStatus().equals(lastCheckResult.getStatus()) && alertConfig != null) {
                 final List<AlertAction> actions = alertConfig
                         .getActions()
                         .stream()
-                        .filter(e -> e.getStatus().equals(stored.getStatus()))
+                        .filter(e -> e.getStatus().equals(toStore.getStatus()))
                         .collect(Collectors.toList());
-                alertHandler.notify(queryResult.getMnemo(), actions, templates, persons);
+                alertHandler.notify(queryResult.getMnemo(), actions, templates, persons, toStore.getReason());
             }
         } catch (Exception e) {
             LOG.error("Unable to handle query result! {}", e.getMessage(), e);

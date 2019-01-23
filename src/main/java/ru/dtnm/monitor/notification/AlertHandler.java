@@ -30,13 +30,13 @@ public class AlertHandler {
     public void notify(
             final String component,
             final List<AlertAction> actions,
-            final Map<String, String> templates, final Map<String, AlertPerson> persons) {
+            final Map<String, String> templates, final Map<String, AlertPerson> persons, final String reason) {
         LOG.debug(">> notify: component={}, status={}, actions={}", component, actions.get(0).getStatus(), actions);
 
         for (AlertAction action : actions) {
             for (AlertRecipient recepient : action.getRecipients()) {
                 if (recepient.isEmail()) {
-                    mailSend.sendMessage(component, action, persons.get(recepient.getLogin()).getEmail(), templates);
+                    mailSend.sendMessage(component, action, persons.get(recepient.getLogin()).getEmail(), templates, reason);
                 }
             }
         }

@@ -79,6 +79,7 @@ function redrawMonitorPage(data) {
             $(element).attr('class', 'column ' + component.status);
             $(element).attr('title', component.status);
 
+<<<<<<< HEAD
             $('<p>Мнемо компонента: ' + lastResponse.mnemo + '</p>').appendTo(element);
             var addressLine = lastResponse.url == null ? '' : lastResponse.url;
             $('<p title="' + addressLine + '">Адрес: ' + lastResponse.url + '</p>').appendTo(element);
@@ -91,6 +92,19 @@ function redrawMonitorPage(data) {
                         responseDuration = lastResponse.componentData.metrics[j].value + 'мс';
                         break;
                     }
+=======
+        $('<p>Мнемо компонента: ' + lastResponse.mnemo + '</p>').appendTo(element);
+        var addressLine = lastResponse.url == null ? '' : lastResponse.url;
+        $('<p title="' + addressLine + '">Адрес: ' + lastResponse.url + '</p>').appendTo(element);
+        var lastResponseLine = lastResponse.httpStatus == null ? '' : lastResponse.httpStatus;
+        $('<p>HTTP - статус: ' + lastResponseLine + '</p>').appendTo(element);
+        var responseDuration = '';
+        if (lastResponse.componentData.metrics != null) {
+            for (var j = 0; j < lastResponse.componentData.metrics.length; j++) {
+                if (lastResponse.componentData.metrics[j].mnemo == 'component.call.duration') {
+                    responseDuration = lastResponse.componentData.metrics[j].value + 'мс';
+                    break;
+>>>>>>> Add reason to emails
                 }
             }
             $('<p>Длительность ответа: ' + responseDuration + '</p>').appendTo(element);

@@ -15,7 +15,7 @@
   ],
   "templates": {
     "COMPONENT_STATUS_CHANGED_SUBJECT": "Изменение статуса компонента",
-    "COMPONENT_STATUS_CHANGED_BODY": "Внимание! Статус компонента {0} изменился на {1}"
+    "COMPONENT_STATUS_CHANGED_BODY": "Внимание! Статус компонента {0} изменился на {1}. Причина: {2}"
   },
   "alerts": [
     {

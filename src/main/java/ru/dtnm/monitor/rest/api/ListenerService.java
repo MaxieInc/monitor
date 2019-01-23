@@ -46,8 +46,9 @@ public class ListenerService {
     @PostMapping(path = "/{mnemo}", consumes = MediaType.APPLICATION_JSON)
     public void accept(@PathVariable("mnemo") final String mnemo, @RequestBody final ComponentData data) throws IOException {
         LOG.debug(">> accept for mnemo={}", mnemo);
-        if (mnemo == null || data == null) throw new BadRequestException("Both mnemo and data must not be null");
-
+        if (mnemo == null || data == null) {
+            throw new BadRequestException("Both mnemo and data must not be null");
+        }
         final MonitoringResult monitoringResult = new MonitoringResult()
                 .setMnemo(mnemo)
                 .setLastOnline(new Date())

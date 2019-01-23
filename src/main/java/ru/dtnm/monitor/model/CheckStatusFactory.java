@@ -22,6 +22,9 @@ import java.util.stream.Collectors;
  */
 public class CheckStatusFactory {
 
+    private static final String NO_RESPONSE_TIMEOUT = "ответ не получен (таймаут)";
+    private static final String LAST_RESPONSE_STATUS = "последний ответ имеет http статус %d";
+
     /**
      * Формирует ответ о работоспособности компонента по резальтутам последнего опроса
      *
@@ -29,7 +32,6 @@ public class CheckStatusFactory {
      * @param componentConfig конфигурация наблюдаемого компонента
      */
     public static CheckStatusResponse status(final MonitoringResult monitoringResult, final ComponentConfig componentConfig) {
-        final CheckStatusResponse response = new CheckStatusResponse();
         final List<CheckStatusContainer> statuses = new ArrayList<>();
 
         // 1. Проверка на соответствие HTTP - статуса ответа и конфига
@@ -51,6 +53,8 @@ public class CheckStatusFactory {
         // 4. Проверка по строковым метрикам
         statuses.addAll(checkProperties(componentConfig.getProperties(), monitoringResult.getComponentData().getProperties()));
 
+        final CheckStatusResponse response = new CheckStatusResponse();
+        response.setReason(monitoringResult.getException());
         response.setLastResponse(monitoringResult);
         final CheckStatusContainer resultStatusContainer = statuses
                 .stream()
@@ -72,12 +76,13 @@ public class CheckStatusFactory {
         final CheckStatusContainer result = new CheckStatusContainer().setReason(CheckMnemoConstant.HTTP_STATUS_CHECK);
         if (status == null) { // статуса нет - не получили ответа за указанное время, обработка таймаута
             result.setStatus(CheckStatus.valueOf(componentResponses.getTimeout()));
+            result.setReason(NO_RESPONSE_TIMEOUT);
         } else if (matches(status, componentResponses.getHealthy())) result.setStatus(CheckStatus.HEALTHY);
         else if (matches(status, componentResponses.getWarning())) result.setStatus(CheckStatus.WARNING);
         else if (matches(status, componentResponses.getCritical())) result.setStatus(CheckStatus.CRITICAL);
         else if (matches(status, componentResponses.getFailed())) result.setStatus(CheckStatus.FAILED);
         else result.setStatus(CheckStatus.valueOf(componentResponses.getOthers()));
-
+        result.setReason(String.format(LAST_RESPONSE_STATUS, status));
         return result;
     }
 

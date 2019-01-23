@@ -22,6 +22,8 @@ import ru.dtnm.monitor.model.config.alert.AlertTemplateType;
 public class MailSendImpl implements MailSend {
 
     private static final Logger LOG = LoggerFactory.getLogger(MailSend.class);
+    private static final String CHANGE_STATUS_BODY = "Внимание! Статус компонента %s изменился на %s. Причина: %s";
+    private static final String CHANGE_STATUS_SUBJECT = "Изменение статуса компонента";
 
     @Value("${mail.from.address}")
     private String mailFromAddress;
@@ -45,8 +47,9 @@ public class MailSendImpl implements MailSend {
             final String component,
             final AlertAction action,
             final String email,
-            final Map<String, String> templates) {
-        LOG.debug(">> sendMessage to {} with action: {}", email, action);
+            final Map<String, String> templates,
+            final String reason) {
+        LOG.debug(">> sendMessage to {} with action={} for reason={}", email, action, reason);
         final MimeMessage message = javaMailSender.createMimeMessage();
         try {
             final MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
@@ -59,7 +62,7 @@ public class MailSendImpl implements MailSend {
 
             // Тело письма
             final String bodyTemplate = templates.get(AlertTemplateType.COMPONENT_STATUS_CHANGED_BODY.name());
-            final String body = MessageFormat.format(bodyTemplate, component, action.getStatus());
+            final String body = MessageFormat.format(bodyTemplate, component, action.getStatus(), reason);
             helper.setText(body, true);
 
             javaMailSender.send(message);

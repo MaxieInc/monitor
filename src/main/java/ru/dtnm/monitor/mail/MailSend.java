@@ -8,5 +8,5 @@ public interface MailSend {
 
 	String ATTR_EMAIL = "email";				// Адрес электронной почты
 
-    void sendMessage(String component, AlertAction action, String email, Map<String, String> templates);
+    void sendMessage(String component, AlertAction action, String email, Map<String, String> templates, String reason);
 }

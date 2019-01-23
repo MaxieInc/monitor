@@ -30,6 +30,9 @@ public class MonitoringResult implements Serializable {
     /** Данные в ответе компонента */
     private ComponentData componentData;
 
+    /** Текст исключения */
+    private String exception;
+
 
     public String getMnemo() {
         return mnemo;
@@ -82,6 +85,15 @@ public class MonitoringResult implements Serializable {
 
     public MonitoringResult setComponentData(ComponentData componentData) {
         this.componentData = componentData;
+        return this;
+    }
+
+    public String getException() {
+        return exception;
+    }
+
+    public MonitoringResult setException(String exception) {
+        this.exception = exception;
         return this;
     }
 
